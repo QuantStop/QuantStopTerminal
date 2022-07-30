@@ -132,7 +132,7 @@ func onReady() {
 	companyUrl := systray.AddMenuItem("Quantstop.com", "Quantstop.com")
 	localUrl := systray.AddMenuItem("QuantstopTerminal", "Local Web App")
 	dataDirUrl := systray.AddMenuItem("App Directory", "Local App Data Directory")
-	quitBtn := systray.AddMenuItem("Quit", "Quit the whole app")
+	quitBtn := systray.AddMenuItem("Quit", "Quit the app")
 
 	go func() {
 
