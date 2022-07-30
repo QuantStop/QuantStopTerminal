@@ -5,9 +5,9 @@ import (
 	"encoding/json"
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
-	"github.com/quantstop/qsx"
-	"github.com/quantstop/qsx/coinbasepro"
-	"github.com/quantstop/qsx/core"
+	"github.com/quantstop/quantstopexchange"
+	"github.com/quantstop/quantstopexchange/qsx"
+	"github.com/quantstop/quantstopexchange/vendors/coinbasepro"
 	"github.com/quantstop/quantstopterminal/internal"
 	"github.com/quantstop/quantstopterminal/internal/database/models"
 	"github.com/quantstop/quantstopterminal/internal/log"
@@ -44,7 +44,7 @@ type Hub struct {
 }
 
 type Subscription struct {
-	ExchangeClient core.Qsx
+	ExchangeClient qsx.IExchange
 	Client         *Client
 	Shutdown       chan struct{}
 }
@@ -188,20 +188,20 @@ func (h *Hub) Unsubscribe(client *Client) {
 	}
 }
 
-func (h *Hub) RunSubscriptionService(sub *Subscription, exchange, product string, client *Client) {
+func (h *Hub) RunSubscriptionService(sub *Subscription, exchangeName, product string, client *Client) {
 
 	log.Debugf(log.Webserver, "Websocket Hub | %v subscription service starting ...", client.ID)
 
 	e := models.Exchange{}
-	err := e.GetExchangeByName(h.db, exchange)
+	err := e.GetExchangeByName(h.db, qsx.Name(exchangeName))
 	if err != nil {
 		log.Error(log.TraderLogger, err)
 		return
 	}
 
 	//Create a client instance
-	sub.ExchangeClient, err = qsx.NewExchange(core.ExchangeName(exchange), &core.Config{
-		Auth: &core.Auth{
+	sub.ExchangeClient, err = quantstopexchange.NewExchange(qsx.Name(exchangeName), &qsx.Config{
+		Auth: &qsx.Auth{
 			Key:        e.AuthKey,
 			Passphrase: e.AuthPassphrase,
 			Secret:     e.AuthSecret,

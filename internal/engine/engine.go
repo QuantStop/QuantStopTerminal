@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"github.com/quantstop/qsx"
-	"github.com/quantstop/qsx/core"
+	"github.com/quantstop/quantstopexchange"
+	"github.com/quantstop/quantstopexchange/qsx"
 	"github.com/quantstop/quantstopterminal/internal/config"
 	"github.com/quantstop/quantstopterminal/internal/database/models"
 	"github.com/quantstop/quantstopterminal/internal/log"
@@ -34,7 +34,7 @@ type Engine struct {
 	Webserver           *webserver.Webserver
 	SubsystemWG         sync.WaitGroup
 	Uptime              time.Time
-	Exchanges           map[string]core.Qsx
+	Exchanges           map[string]qsx.IExchange
 }
 
 const (
@@ -116,7 +116,7 @@ func (bot *Engine) Initialize() error {
 		return err
 	}
 
-	bot.Exchanges = make(map[string]core.Qsx)
+	bot.Exchanges = make(map[string]qsx.IExchange)
 
 	return nil
 }
@@ -329,10 +329,12 @@ func (bot *Engine) initExchanges() (err error) {
 		return err
 	}
 
-	//for name, exchange in qsx.SupportedExchanges
+	for _, name := range qsx.SupportedExchanges {
+		log.Debugln(log.Global, name)
+	}
 
-	ex, err := qsx.NewExchange("coinbasepro", &core.Config{
-		Auth: &core.Auth{
+	ex, err := quantstopexchange.NewExchange("coinbasepro", &qsx.Config{
+		Auth: &qsx.Auth{
 			Key:        e.AuthKey,
 			Passphrase: e.AuthPassphrase,
 			Secret:     e.AuthSecret,
@@ -355,11 +357,6 @@ func (bot *Engine) GetUptime() string {
 	return convert.RoundDuration(time.Since(bot.Uptime), 2).String()
 }
 
-/*func (bot *Engine) GetCoreConfig() map[string]string {
-
-}*/
-
-// todo: make into key, value parameters
 // SetConfig saves system configuration data
 func (bot *Engine) SetConfig(apiUrl string, maxProcs string) error {
 	intVar, err := strconv.Atoi(maxProcs)
@@ -535,7 +532,7 @@ func (bot *Engine) GetTDAmeritradeSQL() (*sql.DB, error) {
 }
 
 // GetExchange returns an exchange connection
-func (bot *Engine) GetExchange(name string) core.Qsx {
+func (bot *Engine) GetExchange(name string) qsx.IExchange {
 	switch name {
 	case "coinbasepro":
 		return bot.Exchanges["coinbasepro"]

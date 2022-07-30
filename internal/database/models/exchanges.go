@@ -3,6 +3,7 @@ package models
 import (
 	"database/sql"
 	"errors"
+	"github.com/quantstop/quantstopexchange/qsx"
 	"github.com/quantstop/quantstopterminal/internal/log"
 )
 
@@ -72,7 +73,7 @@ func (c *Exchange) CreateExchange(db *sql.DB) error {
 	return nil
 }
 
-func (c *Exchange) GetExchangeByName(db *sql.DB, name string) error {
+func (c *Exchange) GetExchangeByName(db *sql.DB, name qsx.Name) error {
 
 	if name == "" {
 		log.Errorf(log.DatabaseLogger, "username is nil")

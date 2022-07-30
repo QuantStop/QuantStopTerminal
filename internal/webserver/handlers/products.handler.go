@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"context"
-	"github.com/quantstop/qsx/core"
+	"github.com/quantstop/quantstopexchange/qsx"
 	"github.com/quantstop/quantstopterminal/internal"
 	"github.com/quantstop/quantstopterminal/internal/database/models"
 	"github.com/quantstop/quantstopterminal/internal/log"
@@ -37,8 +37,8 @@ func GetExchanges(bot internal.IEngine, user *models.User, w http.ResponseWriter
 }
 
 type getCandleResponse struct {
-	Type          string        `json:"type"`
-	HistoricRates []core.Candle `json:"candles"`
+	Type          string       `json:"type"`
+	HistoricRates []qsx.Candle `json:"candles"`
 }
 
 // GetCandles
@@ -71,8 +71,8 @@ func GetCandles(bot internal.IEngine, user *models.User, w http.ResponseWriter, 
 }
 
 type getProductResponse struct {
-	Type     string         `json:"type"`
-	Products []core.Product `json:"products"`
+	Type     string        `json:"type"`
+	Products []qsx.Product `json:"products"`
 }
 
 // GetProducts
