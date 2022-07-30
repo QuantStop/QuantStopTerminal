@@ -1,6 +1,12 @@
 import axios from "axios";
+import * as appRouter from '../router'
+import {userStore} from "../store/userStore";
 const jwtInterceptor = axios.create({});
-
+const defaultUserProfile = {
+    id: 0,
+    username: "",
+    roles: "",
+}
 
 jwtInterceptor.interceptors.request.use((config) => {
   return config;
@@ -11,7 +17,7 @@ jwtInterceptor.interceptors.response.use((response) => {
     },
     async (error) => {
         if (error.response.status === 401) {
-            let response = await axios.get(
+            /*let response = await axios.get(
                 "/api/refresh-token",
                 {
                     withCredentials: true,
@@ -29,7 +35,16 @@ jwtInterceptor.interceptors.response.use((response) => {
             }
             else {
                 return Promise.reject(error);
-            }
+            }*/
+
+
+
+            //appRouter.push('/login')
+            userStore.setLogout(true)
+            userStore.setIsAuthed(false)
+            userStore.setUserProfile(defaultUserProfile)
+
+
         } else {
             return Promise.reject(error);
         }

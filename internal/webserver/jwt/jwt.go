@@ -59,22 +59,16 @@ func WriteUserCookie(w http.ResponseWriter, u *models.User) {
 
 // HandleUserCookie attempts to refresh an expired token if the user is still valid
 func HandleUserCookie(db *sql.DB, w http.ResponseWriter, r *http.Request) (*models.User, error) {
+
+	if db == nil {
+		return nil, errors.InternalError
+	}
+
 	u, err := userFromCookie(r)
 
 	// attempt refresh of expired token:
-	if err == errors.ExpiredToken { //&& u.Status == models.UserStatusActive {
-		user := models.User{}
-		err = user.GetUserByUsername(db, u.Username) // todo: switch to id might be faster
-		//err = env.DB().Debug().Model(models.User{}).Where("username = ?", u.Username).Take(&user).Error
-		if err != nil {
-			fmt.Println("this is the error getting the user: ", err)
-			return wipeCookie(db, w)
-		}
-
-	}
-
-	if err != nil {
-		return nil, err
+	if err == errors.ExpiredToken {
+		return wipeCookie(db, w)
 	}
 
 	return u, err
