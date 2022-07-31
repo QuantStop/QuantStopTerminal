@@ -92,7 +92,7 @@ func LocalCache(folder ...string) string {
 
 // makePath ensures that the full path you wanted, including vendor or
 // application-specific components, exists. You can give this the output of
-// any of the config path functions (SystemConfig, LocalConfig or LocalCache).
+// any config path functions (SystemConfig, LocalConfig or LocalCache).
 //
 // In the event that the path function gives multiple answers, e.g. for
 // SystemConfig, MakePath() will only attempt to create the sub-folders on
@@ -317,7 +317,7 @@ func (c *Config) checkDatabaseConfig() error {
 	return database.CoreDB.SetConfig(&c.CoreDB)
 }
 
-// GetDataPath gets the data path for the given subpath
+// GetDataPath gets the data path for the given sub-path
 func (c *Config) GetDataPath(elem ...string) string {
 	return filepath.Join(append([]string{c.ConfigDir}, elem...)...)
 }
