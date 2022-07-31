@@ -42,7 +42,7 @@ func GetField(r *http.Request, index int) string {
 // New returns a pointer to a new Router
 func New(isDev bool, eng internal.IEngine) (*Router, error) {
 
-	db, err := eng.GetCoreSQL()
+	db, err := eng.GetSQL("core")
 	if err != nil {
 		return nil, err
 	}

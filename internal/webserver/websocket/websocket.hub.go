@@ -62,7 +62,7 @@ type MessageResponse struct {
 }
 
 func NewHub(eng internal.IEngine, shutdown chan struct{}) (*Hub, error) {
-	db, err := eng.GetCoreSQL()
+	db, err := eng.GetSQL("core")
 	if err != nil {
 		return nil, err
 	}

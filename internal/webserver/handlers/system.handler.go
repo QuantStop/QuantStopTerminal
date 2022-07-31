@@ -100,7 +100,7 @@ func isValidUrl(toTest string) bool {
 
 func SetExchange(bot internal.IEngine, user *models.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
 
-	db, _ := bot.GetCoreSQL()
+	db, _ := bot.GetSQL("core")
 
 	decoder := json.NewDecoder(r.Body)
 	req := setExchangeRequest{}

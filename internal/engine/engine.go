@@ -4,10 +4,8 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"github.com/quantstop/quantstopexchange"
 	"github.com/quantstop/quantstopexchange/qsx"
 	"github.com/quantstop/quantstopterminal/internal/config"
-	"github.com/quantstop/quantstopterminal/internal/database/models"
 	"github.com/quantstop/quantstopterminal/internal/log"
 	"github.com/quantstop/quantstopterminal/internal/webserver"
 	"github.com/quantstop/quantstopterminal/pkg/system"
@@ -32,9 +30,9 @@ type Engine struct {
 	InternetSubsystem   *ConnectionMonitor
 	SentimentAnalyzer   *SentimentAnalyzerSubsystem
 	Webserver           *webserver.Webserver
+	ExchangeManager     *ExchangeManager
 	SubsystemWG         sync.WaitGroup
 	Uptime              time.Time
-	Exchanges           map[string]qsx.IExchange
 }
 
 const (
@@ -43,6 +41,7 @@ const (
 	TraderSubsystemName   string = "active_trader"
 	InternetCheckerName   string = "internet_monitor"
 	SentimentAnalyzerName string = "sentiment_analyzer"
+	ExchangeManagerName   string = "exchange_manager"
 )
 
 // engineMutex only locks and unlocks on engine creation functions
@@ -116,7 +115,10 @@ func (bot *Engine) Initialize() error {
 		return err
 	}
 
-	bot.Exchanges = make(map[string]qsx.IExchange)
+	// Initialize exchange manager subsystem
+	if err := bot.initExchangeManagerSubsystem(); err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -219,6 +221,24 @@ func (bot *Engine) initSentimentAnalyzerSubsystem() error {
 	return nil
 }
 
+func (bot *Engine) initExchangeManagerSubsystem() error {
+
+	// Create and init exchange manager subsystem
+	bot.ExchangeManager = &ExchangeManager{Subsystem: Subsystem{}}
+	if err := bot.ExchangeManager.init(bot, ExchangeManagerName); err != nil {
+		log.Errorf(log.Global, "Exchange Manager subsystem unable to initialize: %v", err)
+		return err
+	}
+
+	// Register exchange manager subsystem
+	if err := bot.SubsystemRegistry.RegisterSubsystem(bot.ExchangeManager); err != nil {
+		log.Errorf(log.Global, "Exchange Manager subsystem unable to register: %v", err)
+		return err
+	}
+
+	return nil
+}
+
 // Run starts the newly created instance of the engine
 func (bot *Engine) Run() error {
 
@@ -236,7 +256,6 @@ func (bot *Engine) Run() error {
 	bot.SubsystemRegistry.StartAll(&bot.SubsystemWG)
 
 	// Everything good, create and run webserver
-	// This is done here, because the webserver depends upon the instantiated bot and database connection
 	var err error
 	bot.Webserver, err = webserver.CreateWebserver(bot, bot.Config.Webserver, bot.Version.IsDevelopment)
 	if err != nil {
@@ -251,11 +270,6 @@ func (bot *Engine) Run() error {
 			log.Error(log.Global, err)
 		}
 	}()
-
-	// Instantiate all exchanges that are supported
-	if err = bot.initExchanges(); err != nil {
-		return err
-	}
 
 	// Run the trading subsystem
 	err = bot.TraderSubsystem.run()
@@ -316,39 +330,6 @@ func (bot *Engine) Restart() error {
 		return err
 	}
 	return syscall.Exec(self, args, env)
-}
-
-func (bot *Engine) initExchanges() (err error) {
-
-	// todo: need to get all exchanges in db, then init each one, if any
-
-	e := models.Exchange{}
-	err = e.GetExchangeByName(bot.DatabaseSubsystem.coreDatabase.SQL, "coinbasepro")
-	if err != nil {
-		log.Error(log.Global, err)
-		return err
-	}
-
-	for _, name := range qsx.SupportedExchanges {
-		log.Debugln(log.Global, name)
-	}
-
-	ex, err := quantstopexchange.NewExchange("coinbasepro", &qsx.Config{
-		Auth: &qsx.Auth{
-			Key:        e.AuthKey,
-			Passphrase: e.AuthPassphrase,
-			Secret:     e.AuthSecret,
-			Token:      nil,
-		},
-		Sandbox: false,
-	})
-	if err != nil {
-		log.Error(log.Global, err)
-		return err
-	}
-
-	bot.Exchanges["coinbasepro"] = ex
-	return nil
 }
 
 // GetUptime returns the time since the bot last started
@@ -504,38 +485,37 @@ func (bot *Engine) GetVersion() map[string]string {
 
 }
 
-// GetCoreSQL returns a pointer to the core database connection
-func (bot *Engine) GetCoreSQL() (*sql.DB, error) {
-	if bot.DatabaseSubsystem.coreDatabase.SQL != nil {
-		return bot.DatabaseSubsystem.coreDatabase.SQL, nil
+// GetSQL returns a pointer to the database connection for the given database name
+func (bot *Engine) GetSQL(dbName string) (*sql.DB, error) {
+	switch dbName {
+	case "core":
+		if bot.DatabaseSubsystem.coreDatabase.SQL != nil {
+			return bot.DatabaseSubsystem.coreDatabase.SQL, nil
+		}
+		log.Errorln(log.Global, ErrNilCoreSQL)
+		return nil, ErrNilCoreSQL
+	case "tda":
+		if bot.DatabaseSubsystem.tdameritradeDatabase.SQL != nil {
+			return bot.DatabaseSubsystem.tdameritradeDatabase.SQL, nil
+		}
+		log.Errorln(log.Global, ErrNilTDAmeritradeSQL)
+		return nil, ErrNilTDAmeritradeSQL
+	case "coinbase":
+		if bot.DatabaseSubsystem.coinbaseDatabase.SQL != nil {
+			return bot.DatabaseSubsystem.coinbaseDatabase.SQL, nil
+		}
+		log.Errorln(log.Global, ErrNilCoinbaseSQL)
+		return nil, ErrNilCoinbaseSQL
+	default:
+		return nil, errors.New("GetSQL unknown database name provided")
 	}
-	log.Errorln(log.Global, ErrNilCoreSQL)
-	return nil, ErrNilCoreSQL
-}
-
-// GetCoinbaseSQL returns a pointer to the coinbase database connection
-func (bot *Engine) GetCoinbaseSQL() (*sql.DB, error) {
-	if bot.DatabaseSubsystem.coinbaseDatabase.SQL != nil {
-		return bot.DatabaseSubsystem.coinbaseDatabase.SQL, nil
-	}
-	log.Errorln(log.Global, ErrNilCoinbaseSQL)
-	return nil, ErrNilCoinbaseSQL
-}
-
-// GetTDAmeritradeSQL returns a pointer to the td-ameritrade database connection
-func (bot *Engine) GetTDAmeritradeSQL() (*sql.DB, error) {
-	if bot.DatabaseSubsystem.tdameritradeDatabase.SQL != nil {
-		return bot.DatabaseSubsystem.tdameritradeDatabase.SQL, nil
-	}
-	log.Errorln(log.Global, ErrNilTDAmeritradeSQL)
-	return nil, ErrNilTDAmeritradeSQL
 }
 
 // GetExchange returns an exchange connection
 func (bot *Engine) GetExchange(name string) qsx.IExchange {
 	switch name {
 	case "coinbasepro":
-		return bot.Exchanges["coinbasepro"]
+		return bot.ExchangeManager.Exchanges["coinbasepro"]
 	}
 	return nil
 }
@@ -543,7 +523,7 @@ func (bot *Engine) GetExchange(name string) qsx.IExchange {
 // GetSupportedExchangesList returns a list of all supported exchanges
 func (bot *Engine) GetSupportedExchangesList() []string {
 	var list []string
-	for _, e := range bot.Exchanges {
+	for _, e := range bot.ExchangeManager.Exchanges {
 		list = append(list, string(e.GetName()))
 	}
 	return list

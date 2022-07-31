@@ -47,7 +47,7 @@ func AuthRoute(bot internal.IEngine, h AuthHandler, w http.ResponseWriter, r *ht
 
 		// parse the user cookie
 		var err error
-		db, err := bot.GetCoreSQL()
+		db, err := bot.GetSQL("core")
 		if err != nil {
 			return write.Error(err)
 		}

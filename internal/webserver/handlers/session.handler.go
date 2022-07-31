@@ -32,7 +32,7 @@ type signupRequest struct {
 
 func Login(bot internal.IEngine, user *models.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
 
-	db, _ := bot.GetCoreSQL()
+	db, _ := bot.GetSQL("core")
 	decoder := json.NewDecoder(r.Body)
 	req := loginRequest{}
 	err := decoder.Decode(&req)
@@ -87,7 +87,7 @@ func Logout(bot internal.IEngine, user *models.User, w http.ResponseWriter, r *h
 
 func Signup(bot internal.IEngine, user *models.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
 
-	db, _ := bot.GetCoreSQL()
+	db, _ := bot.GetSQL("core")
 
 	decoder := json.NewDecoder(r.Body)
 	req := signupRequest{}

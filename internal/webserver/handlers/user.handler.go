@@ -60,7 +60,7 @@ func Whoami(bot internal.IEngine, user *models.User, w http.ResponseWriter, r *h
 
 func GetAllUsers(bot internal.IEngine, user *models.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
 
-	db, _ := bot.GetCoreSQL()
+	db, _ := bot.GetSQL("core")
 	users, err := user.GetUsers(db)
 	if err != nil {
 		if err == sql.ErrNoRows {
