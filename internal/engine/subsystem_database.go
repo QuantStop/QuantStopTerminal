@@ -29,11 +29,11 @@ func (s *DatabaseSubsystem) init(bot *Engine, name string) error {
 	if err := s.coreDatabase.SetConfig(&s.bot.Config.CoreDB); err != nil {
 		return err
 	}
-	s.coinbaseDatabase = database.CoreDB
+	s.coinbaseDatabase = database.CoinbaseDB
 	if err := s.coinbaseDatabase.SetConfig(&s.bot.Config.CoinbaseDB); err != nil {
 		return err
 	}
-	s.tdameritradeDatabase = database.CoreDB
+	s.tdameritradeDatabase = database.TDAmeritradeDB
 	if err := s.tdameritradeDatabase.SetConfig(&s.bot.Config.TDAmeritradeDB); err != nil {
 		return err
 	}
@@ -48,34 +48,36 @@ func (s *DatabaseSubsystem) start(wg *sync.WaitGroup) (err error) {
 		return err
 	}
 
-	switch s.bot.Config.CoreDB.Driver {
-	case database.DBPostgreSQL:
-		log.Debugf(log.DatabaseLogger,
-			"database subsystem attempting to establish database connection to host %s/%s utilising %s driver\n",
-			s.bot.Config.CoreDB.DSN.Host,
-			s.bot.Config.CoreDB.DSN.Database,
-			s.bot.Config.CoreDB.Driver)
-		s.coreDatabase, err = pgsql.Connect("core", &s.bot.Config.CoreDB.DSN)
-	case database.DBSQLite, database.DBSQLite3:
-		log.Debugf(log.DatabaseLogger,
-			"database subsystem attempting to establish database connection to %s utilising %s driver\n",
-			s.bot.Config.CoreDB.DSN.Database,
-			s.bot.Config.CoreDB.Driver)
-		s.coreDatabase, err = sqlite.Connect("core", s.bot.Config.CoreDB.DSN.Database)
-	case database.DBMySQL:
-		log.Debugf(log.DatabaseLogger,
-			"database subsystem attempting to establish database connection to host %s/%s utilising %s driver\n",
-			s.bot.Config.CoreDB.DSN.Host,
-			s.bot.Config.CoreDB.DSN.Database,
-			s.bot.Config.CoreDB.Driver)
-		s.coreDatabase, err = mysql.Connect("core", &s.bot.Config.CoreDB.DSN)
-	default:
-		return database.ErrNoDatabaseProvided
+	if s.bot.Config.CoreDB.Enabled {
+		switch s.bot.Config.CoreDB.Driver {
+		case database.DBPostgreSQL:
+			log.Debugf(log.DatabaseLogger,
+				"database subsystem attempting to establish database connection to host %s/%s utilising %s driver\n",
+				s.bot.Config.CoreDB.DSN.Host,
+				s.bot.Config.CoreDB.DSN.Database,
+				s.bot.Config.CoreDB.Driver)
+			s.coreDatabase, err = pgsql.Connect("core", &s.bot.Config.CoreDB.DSN)
+		case database.DBSQLite, database.DBSQLite3:
+			log.Debugf(log.DatabaseLogger,
+				"database subsystem attempting to establish database connection to %s utilising %s driver\n",
+				s.bot.Config.CoreDB.DSN.Database,
+				s.bot.Config.CoreDB.Driver)
+			s.coreDatabase, err = sqlite.Connect("core", s.bot.Config.CoreDB.DSN.Database)
+		case database.DBMySQL:
+			log.Debugf(log.DatabaseLogger,
+				"database subsystem attempting to establish database connection to host %s/%s utilising %s driver\n",
+				s.bot.Config.CoreDB.DSN.Host,
+				s.bot.Config.CoreDB.DSN.Database,
+				s.bot.Config.CoreDB.Driver)
+			s.coreDatabase, err = mysql.Connect("core", &s.bot.Config.CoreDB.DSN)
+		default:
+			return database.ErrNoDatabaseProvided
+		}
+		if err != nil {
+			return fmt.Errorf("%w: %v Core database unavailable", database.ErrFailedToConnect, err)
+		}
+		s.coreDatabase.SetConnected(true)
 	}
-	if err != nil {
-		return fmt.Errorf("%w: %v Core database unavailable", database.ErrFailedToConnect, err)
-	}
-	s.coreDatabase.SetConnected(true)
 
 	if s.bot.Config.CoinbaseDB.Enabled {
 		switch s.bot.Config.CoinbaseDB.Driver {
@@ -142,10 +144,13 @@ func (s *DatabaseSubsystem) start(wg *sync.WaitGroup) (err error) {
 	// finished and connected, try seeding databases
 	log.Debugln(log.DatabaseLogger, s.name+MsgSubsystemStarted)
 	s.started = true
+
+	// todo: seed all databases
 	err = seed.DatabaseSeed(s.coreDatabase.SQL, s.bot.Config.CoreDB.Driver)
 	if err != nil {
 		return err
 	}
+
 	wg.Add(1)
 	s.wg.Add(1)
 	go s.run(wg)
