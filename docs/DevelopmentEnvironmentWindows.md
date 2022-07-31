@@ -37,6 +37,8 @@
   1. Todo: 
 * [Taskfile](https://taskfile.dev/#/installation)
   1. Follow the [instructions](https://taskfile.dev/#/installation)
+* [air](https://github.com/cosmtrek/air)
+  1. Follow the [instructions](https://github.com/cosmtrek/air#installation)
 
 **Note:** If you want to build the Windows installer for QuantstopTerminal, you must also install [WixToolset.](https://wixtoolset.org/releases/)
 This toolset makes a standard .msi installer for the executables within QuantstopTerminal.
@@ -44,7 +46,7 @@ This toolset makes a standard .msi installer for the executables within Quantsto
 ### Installation
 
 _Once you have installed the required dependencies above, continue with getting the project 
-source files from github. This guide assumes you have a terminal with git installed._
+source files from GitHub. This guide assumes you have a terminal with git installed._
 
 1. Clone the repo
    ```sh
