@@ -161,4 +161,5 @@ func init() {
 	TraderLogger = registerNewSubLogger("TRADER")
 	Webserver = registerNewSubLogger("WEBSERVER")
 	SentimentAnalyzer = registerNewSubLogger("SENTIMENT")
+	ExchangeManager = registerNewSubLogger("EXCHANGE")
 }

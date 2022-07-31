@@ -17,6 +17,7 @@ var (
 	TraderLogger      *SubLogger
 	Webserver         *SubLogger
 	SentimentAnalyzer *SubLogger
+	ExchangeManager   *SubLogger
 )
 
 // SubLogger defines a sub logger can be used externally for packages wanted to
