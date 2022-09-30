@@ -23,9 +23,9 @@
   <br>
   <a href="https://github.com/quantstop/quantstopterminal">View Demo</a>
   ·
-  <a href="https://github.com/quantstop/quantstopterminal/issues">Report Bug</a>
+  <a href="https://github.com/QuantStop/QuantStopTerminal/issues/new?assignees=&labels=&template=bug_report.md&title=">Report Bug</a>
   ·
-  <a href="https://github.com/quantstop/quantstopterminal/issues">Request Feature</a>
+  <a href="https://github.com/QuantStop/QuantStopTerminal/issues/new?assignees=&labels=&template=feature_request.md&title=">Request Feature</a>
 </p>
 
 <!-- ABOUT THE PROJECT -->
