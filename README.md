@@ -42,6 +42,7 @@
         >
     </a>
 </div>
+<br>
 <p align="center">
   An open source trading and analysis platform.
   <br>
