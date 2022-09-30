@@ -49,6 +49,7 @@ jobs:
           update-file: Taskfile.yml
           changelog-generator-opt: "emojis=true"
           prerelease: "true"
+          hooks: goreleaser
 
       # Build executables
       - uses: goreleaser/goreleaser-action@v2
