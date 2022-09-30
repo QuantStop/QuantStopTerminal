@@ -1,0 +1,31 @@
+version: '3'
+
+tasks:
+
+  npm-install:
+    desc: Run 'npm install'
+    dir: ./web
+    run: when_changed
+    sources:
+      - src/package.json
+      - src/package-lock.json
+    cmds:
+      - npm install
+
+  npm-build:
+    desc: Run 'npm build'
+    deps: [ npm-install ]
+    dir: ./web
+    run: when_changed
+    sources:
+      - src/*.js
+      - src/*.vue
+      - public/*.html
+      - src/**/*.js
+      - src/**/*.vue
+    generates:
+      - dist/**/*.css
+      - dist/**/*.js
+    method: timestamp
+    cmds:
+      - npm run build
