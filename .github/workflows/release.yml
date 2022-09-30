@@ -44,6 +44,7 @@ jobs:
       # Run go-semantic-release tool https://github.com/go-semantic-release/action
       - name: Semantic Release
         uses: go-semantic-release/action@v1
+        id: semrel
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           changelog-file: CHANGELOG.md
