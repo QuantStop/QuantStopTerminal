@@ -68,11 +68,6 @@ snapshot:
 checksum:
   name_template: checksums.txt
   algorithm: sha256
-#changelog:
-#  filters:
-#    exclude:
-#      - '^docs:'
-#      - '^test:'
   sort: asc
 dist: builds
 env_files:
