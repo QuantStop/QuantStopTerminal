@@ -18,7 +18,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/quantstop/quantstopterminal/internal/log"
-	"github.com/quantstop/quantstopterminal/pkg/system/file"
+	"github.com/quantstop/quantstopterminal/internal/system/file"
 	"hash"
 	"io"
 	"io/ioutil"
