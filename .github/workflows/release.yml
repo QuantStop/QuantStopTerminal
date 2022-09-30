@@ -33,7 +33,9 @@ jobs:
           fetch-depth: 0
 
       # Run go-semantic-release tool
-      - uses: go-semantic-release/action@v1
+      - name: Semantic Release
+        uses: go-semantic-release/action@v1
+        id: semrel
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           update-file: Taskfile.yml
