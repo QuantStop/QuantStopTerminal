@@ -47,7 +47,7 @@ jobs:
         id: semrel
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          changelog-file: CHANGELOG.md
+          changelog-file: "true"
           update-file: Taskfile.yml
           changelog-generator-opt: "emojis=true"
           prerelease: "true"
