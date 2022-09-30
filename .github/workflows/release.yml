@@ -41,14 +41,16 @@ jobs:
           go-version: 1.19
           cache: true
 
-      # Run go-semantic-release tool
+      # Run go-semantic-release tool https://github.com/go-semantic-release/action
       - name: Semantic Release
         uses: go-semantic-release/action@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          changelog-file: CHANGELOG.md
           update-file: Taskfile.yml
           changelog-generator-opt: "emojis=true"
           prerelease: "true"
+          allow-initial-development-versions: "true"
           hooks: goreleaser
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
