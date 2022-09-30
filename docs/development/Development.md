@@ -56,6 +56,9 @@
   <a href="https://github.com/quantstop/quantstopterminal/issues">Request Feature</a>
 </p>
 
+
+
+
 ### To contribute to the development of QuantstopTerminal the following packages are required:
 - [Go 1.15+](https://go.dev/)
 - [NodeJS and NPM](https://nodejs.org/en/)
