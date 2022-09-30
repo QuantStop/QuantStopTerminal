@@ -47,11 +47,9 @@ jobs:
         id: semrel
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          changelog-file: CHANGELOG.md
-          update-file: CHANGELOG.md
           changelog-generator-opt: "emojis=true"
           prerelease: true
           allow-initial-development-versions: true
-          hooks: goreleaser
+          hooks: goreleaser --debug
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

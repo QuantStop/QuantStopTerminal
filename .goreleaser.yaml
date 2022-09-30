@@ -13,7 +13,7 @@ release:
   # Header template for the release body.
   # Defaults to empty.
   header: |
-    ## QuantStopTerminal Release ({{ .Date }})
+    ## {{ .ProjectName }} Release {{ .Tag }} ({{ .Date }})
 
   # Footer template for the release body.
   # Defaults to empty.
