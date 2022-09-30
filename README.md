@@ -1,10 +1,9 @@
-
-<h1 align="center"> 
-    QuantStopTerminal <br/>
+<h1 align="center">QuantStopTerminal</h1>
+<p align="center">
     <a href="https://quantstop.com">
-        <img alt="logo"  width="150" height="150" src="https://github.com/quantstop/quantstopterminal/assets/images/qst.png">
+        <img alt="logo" width="150" height="150" src="https://github.com/QuantStop/QuantStopTerminal/blob/release/assets/images/qst.png?raw=true">
     </a>
-</h1>
+</p>
 <p align="center">
   An open source trading and analysis platform.
   <br />
@@ -17,14 +16,14 @@
   ·
   <a href="https://github.com/quantstop/quantstopterminal/issues">Request Feature</a>
 </p>
-<p align="center">
-	<a href="https://github.com/quantstop/quantstopterminal/actions"><img src="https://github.com/quantstop/quantstopterminal/actions/workflows/build.yml/badge.svg?branch=release" alt="GitHub actions"></a>
+<h1 align="center">
+	<a href="https://github.com/quantstop/quantstopterminal/actions"><img src="https://github.com/quantstop/quantstopterminal/actions/workflows/release.yml/badge.svg?branch=release" alt="GitHub actions"></a>
     <a href="https://goreportcard.com/report/github.com/quantstop/quantstopterminal"><img src="https://goreportcard.com/badge/github.com/quantstop/quantstopterminal" alt="Go Report Card"></a>
 	<a href="https://GitHub.com/quantstop/quantstopterminal/releases/"><img src="https://img.shields.io/github/release/quantstop/quantstopterminal.svg" alt="GitHub release"></a>
 	<a href="https://pkg.go.dev/github.com/quantstop/quantstopterminal"><img src="https://img.shields.io/badge/dev-reference-007d9c?logo=go&logoColor=white&style=flat" alt="pkg.go.dev docs"></a>
     <a href="https://twitter.com/quantstop"><img alt="Twitter URL" src="https://img.shields.io/badge/twitter-@QuantStop-wnZunKusqrz0QZNxE4Ag?logo=twitter&style=flat"></a>
     
-</p>
+</h1>
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
