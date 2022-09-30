@@ -50,3 +50,5 @@ jobs:
           changelog-generator-opt: "emojis=true"
           prerelease: "true"
           hooks: goreleaser
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
