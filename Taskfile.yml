@@ -11,8 +11,6 @@ vars:
   PROJECT_DIR:
     sh: pwd | sed 's/\\/\//g'
   ISRELEASE: true
-  GIT_COMMIT:
-    sh: git log -n 1 --format=%h
 
 tasks:
 
@@ -21,36 +19,41 @@ tasks:
     cmds:
       - task -l
 
-  git-commit:
-    cmds:
-      - echo "{{.GIT_COMMIT}}"
-
   run:
     desc: Run the project
     dir: ./
     cmds:
       - air -c .air.toml
 
-  release: # Todo: implement this
+  release:
     desc: Release the project
     deps: [ build ]
     summary: |
-      Release your project to github
+      Release the project to github
 
       It will build your project before starting the release.
       Please make sure that you have set GITHUB_TOKEN before starting.
     cmds:
-      - your-release-tool
+      - goreleaser
 
   build:
     desc: Build the project
     cmds:
-      - goreleaser build
-      #- task: windows:build-win-amd64
-      #- task: windows:build-win-386
+      - goreleaser release --skip-publish
 
   clean:
     desc: Clean the project
     cmds:
       - task: windows:clean-win-amd64
       - task: windows:clean-win-386
+
+  dl-deps:
+    desc: Install tools required to build this app
+    cmds:
+      - go install github.com/goreleaser/goreleaser@latest
+      - task: go-get
+        vars: { REPO: github.com/go-semantic-release/semantic-release }
+
+  go-get:
+    cmds:
+      - go get -u {{.REPO}}

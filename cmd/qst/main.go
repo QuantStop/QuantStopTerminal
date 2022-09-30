@@ -1,15 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"github.com/quantstop/quantstopterminal/internal/engine"
 	"github.com/quantstop/quantstopterminal/internal/log"
-	"os"
-	"strings"
 )
 
 var (
-	// these will be replaced by goreleaser
+	// these will be replaced by the release process using ldflags
 	version = "v0.0.0"
 	commit  = "0000000"
 	date    = "0001-01-01T00:00:00Z"
@@ -17,21 +14,16 @@ var (
 
 func main() {
 
-	// parse goreleaser info
-	if len(os.Args) >= 2 && "version" == strings.TrimPrefix(os.Args[1], "") {
-		fmt.Printf("YOUR_CLI_NAME v%s %s (%s)\n", version, commit[:7], date)
-	}
-
-	log.Debugln(log.Global, "Creating Engine ...")
-	err, bot := engine.NewEngine()
+	log.Debugf(log.Global, "Creating Engine v%s %s (%s)\n", version, commit, date)
+	err, bot := engine.NewEngine(version, commit, date)
 	if err != nil {
 		log.Fatalf(log.Global, "Creating Engine ... Error: %s\n", err)
 	}
-	log.Debugln(log.Global, "Creating Engine ... Success.")
+	log.Debugln(log.Global, "Engine created.")
 
 	log.Debugln(log.Global, "Starting Engine ...")
 	bot.Start()
 
-	log.Debugln(log.Global, "Starting Engine ... Success.")
+	log.Debugln(log.Global, "Engine started.")
 	bot.WaitForInterrupt()
 }

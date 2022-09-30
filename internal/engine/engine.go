@@ -25,7 +25,7 @@ type Engine struct {
 	sync.WaitGroup  // Service WaitGroup
 }
 
-func NewEngine() (error, *Engine) {
+func NewEngine(version, commit, date string) (error, *Engine) {
 	if engineInstance == nil {
 		engineLock.Lock()
 		defer engineLock.Unlock()

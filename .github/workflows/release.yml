@@ -41,26 +41,14 @@ jobs:
           go-version: 1.19
           cache: true
 
-      # Run the SVU tool to generate tags
-      - name: Run SVU
-        run: |
-          go get github.com/caarlos0/svu
-          go install github.com/caarlos0/svu
-          git tag $(svu next)
-
-      # Cleanup go.mod from previous step
-      - name: Cleanup go.mod
-        run: go mod tidy
-
-      # Run the GoReleaser tool
-      - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v3
+      # Run go-semantic-release tool https://github.com/go-semantic-release/action
+      - name: Semantic Release
+        uses: go-semantic-release/action@v1
+        id: semrel
         with:
-          # either 'goreleaser' (default) or 'goreleaser-pro'
-          distribution: goreleaser
-          version: latest
-          args: release --rm-dist
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          prerelease: true
+          allow-initial-development-versions: true
+          hooks: goreleaser
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Your GoReleaser Pro key, if you are using the 'goreleaser-pro' distribution
-          # GORELEASER_KEY: ${{ secrets.GORELEASER_KEY }}
