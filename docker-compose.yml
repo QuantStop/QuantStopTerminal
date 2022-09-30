@@ -1,0 +1,22 @@
+version: '3.8'
+
+networks:
+  qst_network:
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.0.0.0/16
+
+
+services:
+
+  quantstopterminal:
+    build:
+      context: ./
+      dockerfile: deployment/docker/Dockerfile
+
+    ports:
+      - "8080:8080"
+    networks:
+      qst_network:
+        ipv4_address: 10.0.0.2

@@ -1,0 +1,49 @@
+version: '3'
+
+includes:
+  docker: ./scripts/taskfiles/DockerTasks.yml
+  windows: ./scripts/taskfiles/WindowsTasks.yml
+  linux: ./scripts/taskfiles/LinuxTasks.yml
+  frontend: ./scripts/taskfiles/FrontendTasks.yml
+
+vars:
+  VERSION: 0.0.1
+  PROJECT_DIR:
+    sh: pwd | sed 's/\\/\//g'
+  ISRELEASE: true
+
+tasks:
+
+  default:
+    desc: Show available tasks for this project
+    cmds:
+      - task -l
+
+  run:
+    desc: Run the project
+    dir: ./
+    cmds:
+      - air -c .air.toml
+
+  release: # Todo: implement this
+    desc: Release the project
+    deps: [ build ]
+    summary: |
+      Release your project to github
+
+      It will build your project before starting the release.
+      Please make sure that you have set GITHUB_TOKEN before starting.
+    cmds:
+      - your-release-tool
+
+  build:
+    desc: Build the project
+    cmds:
+      - task: windows:build-win-amd64
+      - task: windows:build-win-386
+
+  clean:
+    desc: Clean the project
+    cmds:
+      - task: windows:clean-win-amd64
+      - task: windows:clean-win-386
