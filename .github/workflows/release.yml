@@ -2,36 +2,28 @@
 
 name: Release
 
-# Controls when the workflow will run
 on:
 
-  # Triggers the workflow to run on push events for the specified branches
   push:
-    branches: [ "release" ]
+    branches:
+      - '**'
 
-  # Triggers the workflow to run on push events for the specified branches
   pull_request:
-    branches: [ "release" ]
+    branches:
+      - '**'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# Control permissions for the workflow
 permissions:
   contents: write
   # packages: write
   # issues: write
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
 
-  # This workflow contains a single job called "release"
   release:
-
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
 
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -40,8 +32,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Fetch the git tags
-      - run: git fetch --force --tags
+      # Run go-semantic-release tool
+      - uses: go-semantic-release/action@v1
+        id: semrel
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          #update-file: package.json
+          changelog-generator-opt: "emojis=true"
+          provider-opt: "github_use_compare_commits=true"
+          maintainedVersion: "prerelease",
 
       # Set up Go environment
       - name: Set up Go
@@ -50,6 +49,7 @@ jobs:
           go-version: 1.19
           cache: true
 
+      # Build executables
       - uses: goreleaser/goreleaser-action@v2
         with:
           distribution: goreleaser
@@ -58,17 +58,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      #- name: Install Build Tools - Task
-      #  run: go install github.com/go-task/task/v3/cmd/task@latest
 
-      #- name: Install Build Tools - goversioninfo
-      #  run: go get github.com/josephspurrier/goversioninfo/cmd/goversioninfo
 
-      # Build Go project
-      #- name: Build
-      #  run: task build
 
-      # Test Go project
-      #- name: Test
-      #  run: go test -v ./...
+
 
