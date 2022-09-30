@@ -7,13 +7,12 @@
 
 </p>
 
-<h1 align="center">QuantStopTerminal</h1>
-
-<h1 align="center">
+<div align="center">
+    <h1>QuantStopTerminal</h1>
     <a href="https://quantstop.com">
         <img alt="logo" width="150" height="150" src="https://github.com/QuantStop/QuantStopTerminal/blob/release/assets/images/qst.png?raw=true">
     </a>
-</h1>
+</div>
 
 <p align="center">
   An open source trading and analysis platform.
