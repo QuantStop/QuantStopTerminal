@@ -11,6 +11,8 @@ vars:
   PROJECT_DIR:
     sh: pwd | sed 's/\\/\//g'
   ISRELEASE: true
+  GIT_COMMIT:
+    sh: git log -n 1 --format=%h
 
 tasks:
 
@@ -18,6 +20,10 @@ tasks:
     desc: Show available tasks for this project
     cmds:
       - task -l
+
+  git-commit:
+    cmds:
+      - echo "{{.GIT_COMMIT}}"
 
   run:
     desc: Run the project
@@ -39,8 +45,9 @@ tasks:
   build:
     desc: Build the project
     cmds:
-      - task: windows:build-win-amd64
-      - task: windows:build-win-386
+      - goreleaser build
+      #- task: windows:build-win-amd64
+      #- task: windows:build-win-386
 
   clean:
     desc: Clean the project
