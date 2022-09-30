@@ -47,7 +47,10 @@ jobs:
           go get github.com/caarlos0/svu
           go install github.com/caarlos0/svu
           git tag $(svu next)
-          go mod tidy
+
+      # Cleanup go.mod from previous step
+      - name: Cleanup go.mod
+        run: go mod tidy
 
       # Run the GoReleaser tool
       - name: Run GoReleaser
