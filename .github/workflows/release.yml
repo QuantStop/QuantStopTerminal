@@ -38,7 +38,6 @@ jobs:
       - name: Semantic Release
         uses: go-semantic-release/action@v1
         with:
-          #github-token: ${{ secrets.GITHUB_TOKEN }}
           update-file: Taskfile.yml
           changelog-generator-opt: "emojis=true"
           provider-opt: "github_use_compare_commits=true"
