@@ -89,7 +89,7 @@ changelog:
   # Sorts the changelog by the commits messages.
   # Could either be asc, desc or empty
   # Default is empty
-  sort: empty
+  sort: asc
 
   # Group commits messages by given regex and title.
   # Order value defines the order of the groups.
@@ -98,23 +98,33 @@ changelog:
   #
   # Default is no groups.
   groups:
-    - title: Features
+    - title: Dependency updates
+      regexp: "^.*(feat|fix)\\(deps\\)*:+.*$"
+      order: 300
+    - title: 'New Features'
       regexp: "^.*feat[(\\w)]*:+.*$"
-      order: 0
+      order: 100
     - title: 'Bug fixes'
       regexp: "^.*fix[(\\w)]*:+.*$"
-      order: 1
-    - title: Others
-      order: 999
+      order: 200
+    - title: 'Documentation updates'
+      regexp: "^.*docs[(\\w)]*:+.*$"
+      order: 400
+    - title: Other work
+      order: 9999
 
   filters:
     # Commit messages matching the regexp listed here will be removed from
     # the changelog
     # Default is empty
     exclude:
-      - '^docs:'
-      - typo
-      - (?i)foo
+      - '^test:'
+      - '^chore'
+      - 'merge conflict'
+      - Merge pull request
+      - Merge remote-tracking branch
+      - Merge branch
+      - go mod tidy
 dist: builds
 env_files:
   github_token: ~/.config/goreleaser/github_token
