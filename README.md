@@ -1,46 +1,18 @@
 <h1 align="center">QuantStopTerminal</h1>
-<p align="center">
-	<a href="https://github.com/quantstop/quantstopterminal/actions">
-        <img 
-            alt="Build Status"
-            src="https://github.com/quantstop/quantstopterminal/actions/workflows/release.yml/badge.svg?branch=release"
-        >
-    </a>
-    <a href="https://github.com/quantstop/quantstopterminal/blob/release/LICENSE">
-        <img 
-            alt="License"
-            src="https://img.shields.io/badge/License-MIT-orange.svg?style=flat-square"
-        >
-    </a>
-    <a href="https://godoc.org/github.com/quantstop/quantstopterminal">
-        <img 
-            alt="GoDoc"
-            src="https://godoc.org/github.com/quantstop/quantstopterminal?status.svg"
-        >
-    </a>
-    <a href="https://goreportcard.com/report/github.com/quantstop/quantstopterminal">
-        <img 
-            alt="Go Report Card"
-            src="https://goreportcard.com/badge/github.com/quantstop/quantstopterminal" 
-        >
-    </a>
-    <a href="https://twitter.com/quantstop">
-        <img 
-            alt="Twitter URL" 
-            src="https://img.shields.io/badge/twitter-@QuantStop-wnZunKusqrz0QZNxE4Ag?logo=twitter&style=flat"
-        >
-    </a>
-</p>
+<div align="center">
+
+[![Build Status][build-status-img]][build-status-url]
+[![License][license-img]][license-url]
+[![GoDoc][godoc-img]][godoc-url]
+[![Go Report Card][go-report-img]][go-report-url]
+[![Twitter URL][twitter-img]][twitter-url]
+
+</div>
 <br>
 <div align="center">
-    <a href="https://quantstop.com">
-        <img 
-            alt="logo" 
-            width="150" 
-            height="150" 
-            src="https://github.com/QuantStop/QuantStopTerminal/blob/release/assets/images/qst.png?raw=true"
-        >
-    </a>
+
+[![Logo][logo-img]][logo-url]
+
 </div>
 <br>
 <p align="center">
@@ -74,18 +46,12 @@ learn about quantitative analysis, and much more.
 <!-- GETTING STARTED -->
 ## Getting Started
 
-### Get the application:
 To download the application visit [Quantstop.com](https://quantstop.com)
 <br>
-
-
-<!-- USAGE EXAMPLES -->
-### Usage:
 
 Use this space to show useful examples of how a project can be used. 
 Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
 
-For more examples, please refer to the [Documentation](https://example.com)
 
 <!-- CONTRIBUTING -->
 ## Contributing
@@ -108,14 +74,20 @@ Distributed under the MIT License. See the full [LICENSE](assets/licenses/Eula_e
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/quantstop/quantstopterminal.svg?style=for-the-badge
-[contributors-url]: https://github.com/quantstop/quantstopterminal/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/quantstop/quantstopterminal.svg?style=for-the-badge
-[forks-url]: https://github.com/quantstop/quantstopterminal/network/members
-[stars-shield]: https://img.shields.io/github/stars/quantstop/quantstopterminal.svg?style=for-the-badge
-[stars-url]: https://github.com/quantstop/quantstopterminal/stargazers
-[issues-shield]: https://img.shields.io/github/issues/quantstop/quantstopterminal.svg?style=for-the-badge
-[issues-url]: https://github.com/quantstop/quantstopterminal/issues
-[license-shield]: https://img.shields.io/github/license/quantstop/quantstopterminal.svg?style=for-the-badge
-[license-url]: https://github.com/quantstop/quantstopterminal/blob/main/LICENSE
+
+
+<!-- badges -->
+[build-status-url]: https://github.com/quantstop/quantstopterminal/actions/workflows/release.yml/badge.svg?branch=release
+[build-status-img]: https://github.com/quantstop/quantstopterminal/actions/workflows/release.yml/badge.svg?branch=release
+[license-url]: https://github.com/quantstop/quantstopterminal/blob/release/LICENSE
+[license-img]: https://img.shields.io/badge/License-MIT-orange.svg?style=flat-round
+[godoc-url]: https://godoc.org/github.com/quantstop/quantstopterminal
+[godoc-img]: https://godoc.org/github.com/quantstop/quantstopterminal?status.svg
+[go-report-url]: https://goreportcard.com/report/github.com/quantstop/quantstopterminal
+[go-report-img]: https://goreportcard.com/badge/github.com/quantstop/quantstopterminal
+[twitter-url]: https://twitter.com/quantstop
+[twitter-img]: https://img.shields.io/badge/twitter-@QuantStop-wnZunKusqrz0QZNxE4Ag?logo=twitter&style=flat
+
+[logo-img]: assets/images/qst.png
+[logo-url]: https://quantstop.com
 [product-screenshot]: web/src/assets/screenshot.png
