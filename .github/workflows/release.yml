@@ -33,13 +33,12 @@ jobs:
           fetch-depth: 0
 
       - run: git fetch --all # Re-pull the repo to get the latest tags
-      - uses: asdf-vm/actions/install@v1
 
       # Run go-semantic-release tool
       - name: Semantic Release
         uses: go-semantic-release/action@v1
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          #github-token: ${{ secrets.GITHUB_TOKEN }}
           update-file: Taskfile.yml
           changelog-generator-opt: "emojis=true"
           provider-opt: "github_use_compare_commits=true"
