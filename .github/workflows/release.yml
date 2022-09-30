@@ -37,10 +37,10 @@ jobs:
         id: semrel
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          #update-file: package.json
+          update-file: Taskfile.yml
           changelog-generator-opt: "emojis=true"
           provider-opt: "github_use_compare_commits=true"
-          maintainedVersion: "prerelease",
+          prerelease: "true",
 
       # Set up Go environment
       - name: Set up Go
