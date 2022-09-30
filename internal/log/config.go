@@ -1,6 +1,6 @@
 package log
 
-import "github.com/quantstop/quantstopterminal/pkg/system/convert"
+import "github.com/quantstop/quantstopterminal/internal/system/convert"
 
 // Config holds configuration settings loaded from bot config
 type Config struct {

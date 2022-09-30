@@ -3,7 +3,7 @@ package log
 import (
 	"bytes"
 	"errors"
-	"github.com/quantstop/quantstopterminal/pkg/system/convert"
+	"github.com/quantstop/quantstopterminal/internal/system/convert"
 	"io"
 	"log"
 	"os"

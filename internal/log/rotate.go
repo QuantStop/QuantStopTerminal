@@ -3,7 +3,7 @@ package log
 import (
 	"errors"
 	"fmt"
-	"github.com/quantstop/quantstopterminal/pkg/system/file"
+	"github.com/quantstop/quantstopterminal/internal/system/file"
 	"os"
 	"path/filepath"
 	"sync"

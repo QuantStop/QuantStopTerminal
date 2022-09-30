@@ -3,6 +3,7 @@ package config
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 )
@@ -14,7 +15,7 @@ func Example() {
 	configPath := LocalConfig("my-app")
 	err := makePath(configPath) // Ensure it exists.
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	// Deal with a JSON configuration file in that folder.
@@ -31,37 +32,37 @@ func Example() {
 		settings = AppSettings{"MyUser", "MyPassword"}
 		fh, err := os.Create(configFile)
 		if err != nil {
-			panic(err)
+			log.Fatal(err)
 		}
 		defer func(fh *os.File) {
 			err := fh.Close()
 			if err != nil {
-				panic(err)
+				log.Fatal(err)
 			}
 		}(fh)
 
 		encoder := json.NewEncoder(fh)
 		err = encoder.Encode(&settings)
 		if err != nil {
-			panic(err)
+			log.Fatal(err)
 		}
 	} else {
 		// Load the existing file.
 		fh, err := os.Open(configFile)
 		if err != nil {
-			panic(err)
+			log.Fatal(err)
 		}
 		defer func(fh *os.File) {
 			err := fh.Close()
 			if err != nil {
-				panic(err)
+				log.Fatal(err)
 			}
 		}(fh)
 
 		decoder := json.NewDecoder(fh)
 		err = decoder.Decode(&settings)
 		if err != nil {
-			panic(err)
+			log.Fatal(err)
 		}
 	}
 }
@@ -141,13 +142,13 @@ func ExampleMakePath() {
 	// a directory, depending on the value of `$XDG_CONFIG_HOME`.
 	err := makePath(LocalConfig("my-cool-app"))
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	// Create a cache folder under a namespace.
 	err = makePath(LocalCache("acme", "sprockets", "client"))
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	// In the case of global system configuration, which may return more than
@@ -159,7 +160,7 @@ func ExampleMakePath() {
 	// to create any folders under "/opt/config".
 	err = makePath(SystemConfig("acme", "sprockets")...)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 }
 
