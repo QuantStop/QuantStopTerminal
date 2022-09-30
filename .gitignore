@@ -27,6 +27,9 @@
 
 # air go runner stuff
 tmp/
+tmp/build-errors.log
 
 # go builds
 builds/
+
+dist/
