@@ -8,21 +8,17 @@ version: '3'
 
 tasks:
 
+  goversioninfo:
+    desc: run goversioninfo tool
+    cmds:
+      - cd cmd/qst && goversioninfo -icon={{.PROJECT_DIR}}/assets/images/qst.ico -company=Quantstop -product-version={{.VERSION}} -product-name=QST
+
   # 64-Bit build tasks ------------------------------------------------------------------------------------------------
 
   build-win-amd64:
-    desc: Build the project for windows-amd64 (64-bit)
-    cmds:
-      - task: build-qst-win-amd64
-      - task: package-win-amd64
-
-  build-qst-win-amd64:
     desc: Build qst for windows-amd64 (64-bit)
     cmds:
-      - task frontend:npm-build
-      - cd cmd/qst && goversioninfo -icon={{.PROJECT_DIR}}/assets/images/qst.ico -company=Quantstop -product-version={{.VERSION}} -product-name=QST
       - GO111MODULE=on GOOS=windows GOARCH=amd64 go build -ldflags="-H=windowsgui -X=main.BuildFlagVersion={{.VERSION}} -X=main.BuildFlagIsRelease={{.ISRELEASE}}" -tags=prod -o {{.PROJECT_DIR}}/builds/windows-amd64/qst.exe {{.PROJECT_DIR}}/cmd/qst/
-      - rm cmd/qst/resource.syso
 
   package-win-amd64:
     desc: Packages the build into an .msi installer (64-bit)
@@ -30,29 +26,21 @@ tasks:
     cmds:
       - candle *.wxs -arch=x64 -dProjectDir={{.PROJECT_DIR}} -dPlatform=x64 -dVersionNumber={{.VERSION}} -o {{.PROJECT_DIR}}/builds/windows-amd64/
       - light.exe {{.PROJECT_DIR}}/builds/windows-amd64/*.wixobj -ext WixUIExtension -ext WixUtilExtension -sacl -spdb -cultures:en-us -loc Product_en-us.wxl -out {{.PROJECT_DIR}}/builds/windows-amd64/qst-{{.VERSION}}-x64.msi
-      - rm {{.PROJECT_DIR}}/builds/windows-amd64/*.wixobj
 
   clean-win-amd64:
     desc: Removes build artifacts for windows-amd64 (64-bit)
     dir: ./builds/windows-amd64
     cmds:
       - rm qst.exe qst-{{.VERSION}}-x64.msi
+      - rm cmd/qst/resource.syso
+      - rm {{.PROJECT_DIR}}/builds/windows-amd64/*.wixobj
 
   # 32-Bit build tasks ------------------------------------------------------------------------------------------------
 
   build-win-386:
-    desc: Build the project for windows-386 (32-bit)
-    cmds:
-      - task: build-qst-win-386
-      - task: package-win-386
-
-  build-qst-win-386:
     desc: Build qst for windows-386 (32-bit)
     cmds:
-      - task frontend:npm-build
-      - cd cmd/qst && goversioninfo -icon={{.PROJECT_DIR}}/assets/images/qst.ico -company=Quantstop -product-version={{.VERSION}} -product-name=QST
       - GO111MODULE=on GOOS=windows GOARCH=386 go build -ldflags="-H=windowsgui -X=main.BuildFlagVersion={{.VERSION}} -X=main.BuildFlagIsRelease={{.ISRELEASE}}" -tags=prod -o {{.PROJECT_DIR}}/builds/windows-386/qst.exe {{.PROJECT_DIR}}/cmd/qst/
-      - rm cmd/qst/resource.syso
 
   package-win-386:
     desc: Packages the build into an .msi installer (32-bit)
@@ -60,10 +48,11 @@ tasks:
     cmds:
       - candle *.wxs -arch=x86 -dProjectDir={{.PROJECT_DIR}} -dPlatform=x86 -dVersionNumber={{.VERSION}} -o {{.PROJECT_DIR}}/builds/windows-386/
       - light.exe {{.PROJECT_DIR}}/builds/windows-386/*.wixobj -ext WixUIExtension -ext WixUtilExtension -sacl -spdb -cultures:en-us -loc Product_en-us.wxl -out {{.PROJECT_DIR}}/builds/windows-386/qst-{{.VERSION}}-x86.msi
-      - rm {{.PROJECT_DIR}}/builds/windows-386/*.wixobj
 
   clean-win-386:
     desc: Removes build artifacts for windows-386 (32-bit)
     dir: ./builds/windows-386
     cmds:
       - rm qst.exe qst-{{.VERSION}}-x86.msi
+      - rm cmd/qst/resource.syso
+      - rm {{.PROJECT_DIR}}/builds/windows-386/*.wixobj
