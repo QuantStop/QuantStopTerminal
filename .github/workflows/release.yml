@@ -35,7 +35,6 @@ jobs:
       # Run go-semantic-release tool
       - name: Semantic Release
         uses: go-semantic-release/action@v1
-        id: semrel
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           update-file: Taskfile.yml
