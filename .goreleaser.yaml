@@ -1,9 +1,31 @@
 project_name: QuantStopTerminal
 release:
+  # Repo in which the release will be created.
+  # Default is extracted from the origin remote URL or empty if its private hosted.
   github:
     owner: QuantStop
     name: QuantStopTerminal
+
+  # You can change the name of the release.
+  # Default is `{{.Tag}}` on OSS and `{{.PrefixedTag}}` on Pro.
   name_template: '{{.Tag}}'
+
+  # Header template for the release body.
+  # Defaults to empty.
+  header: |
+    ## QuantStopTerminal Release ({{ .Date }})
+
+  # Footer template for the release body.
+  # Defaults to empty.
+  footer: |
+    **Full Changelog**: https://github.com/quantstop/quantstopterminal/compare/{{ .PreviousTag }}...{{ .Tag }}
+
+    ## What to do next?
+
+    - Read the [Documentation](https://github.com/quantstop/quantstopterminal/)
+    - Join our [Discord server](https://discord.gg/cPuJcewJJh)
+    - Follow us on [Twitter](https://twitter.com/quantstop/quantstopterminal)
+
 scoop:
   name: QuantStopTerminal
   commit_author:
