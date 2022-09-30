@@ -39,7 +39,7 @@ tasks:
   build:
     desc: Build the project
     cmds:
-      - goreleaser release --skip-publish
+      - goreleaser build --rm-dist
 
   clean:
     desc: Clean the project
