@@ -19,6 +19,11 @@ tasks:
     cmds:
       - task -l
 
+  set-version:
+    desc: Sets the global VERSION
+    cmds:
+      -
+
   deps:
     desc: Install all developer depencies for this project
     cmds:
