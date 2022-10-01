@@ -4,16 +4,12 @@ name: Release
 
 on:
 
+  # Triggers the workflow on push or pull request events but only for the release branch
   push:
     branches: [ release ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-
-permissions:
-  contents: write
-  packages: write
-  issues: write
 
 jobs:
 
@@ -26,10 +22,6 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-
-      # Re-pull the repo to get the latest tags
-      - name: Fetch Tags
-        run: git fetch --all
 
       # Set up Go actions
       - name: Set up Go
@@ -52,9 +44,14 @@ jobs:
       - name: Install Dependencies
         run: task deps
 
-      # Run Release
+      # Run Semantic-Release to generate new tags
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          #NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm run semantic-release
+
+      # Run GoReleaser to generate artifacts and create release
+      - name: GoReleaser
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: task release
