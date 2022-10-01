@@ -1,3 +1,11 @@
+## [0.2.6](https://github.com/QuantStop/QuantStopTerminal/compare/v0.2.5...v0.2.6) (2022-10-01)
+
+
+### Bug Fixes
+
+* **ci:** build and release workflow ([45180fc](https://github.com/QuantStop/QuantStopTerminal/commit/45180fcb092ffe03bd5c4b5bf93433e60e2c140c))
+* **ci:** move semantic-release config into package.json ([ee588c8](https://github.com/QuantStop/QuantStopTerminal/commit/ee588c80e71114121ecded4f2fa343154be951d1))
+
 ## [0.2.5](https://github.com/QuantStop/QuantStopTerminal/compare/v0.2.4...v0.2.5) (2022-10-01)
 
 
