@@ -40,11 +40,10 @@ tasks:
     desc: Release the project
     deps: [ build ]
     cmds:
-      - goreleaser release
-      - npx semantic-release
+      - npx -p @semantic-release/changelog -p @semantic-release/exec -p @semantic-release/git semantic-release
 
   install-semantic-release:
-    desc: Install Semantic Release - https://github.com/semantic-release/semantic-release
+    desc: Install Semantic Release - https://semantic-release.gitbook.io/semantic-release/
     cmds:
       - npm install --save-dev semantic-release
 
