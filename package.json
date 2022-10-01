@@ -13,6 +13,34 @@
     "type-check": "vue-tsc -p ./web/tsconfig.json --noEmit",
     "semantic-release": "semantic-release"
   },
+  "release": {
+    "branches": [
+      "release",
+      "next",
+      "next-major",
+      "+([0-9])?(.{+([0-9]),x}).x",
+      { "name": "beta", "prerelease": true },
+      { "name": "alpha", "prerelease": true }
+    ],
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      [
+        "@semantic-release/changelog",
+        {
+          "changelogFile": "./docs/CHANGELOG.md"
+        }
+      ],
+      "@semantic-release/github",
+      [
+        "@semantic-release/git",
+        {
+          "assets": ["./docs/CHANGELOG.md", "./package.json", "./package-lock.json"],
+          "message": "chore(release): version ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+        }
+      ]
+    ]
+  },
   "dependencies": {
     "vue": "^3.2.38",
     "vue-router": "^4.1.5"
@@ -20,7 +48,6 @@
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.1",
     "@semantic-release/git": "^10.0.1",
-    "@semantic-release/npm": "^9.0.1",
     "@types/node": "^16.11.56",
     "@vitejs/plugin-vue": "^3.0.3",
     "@vue/tsconfig": "^0.1.3",

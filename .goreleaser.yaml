@@ -16,7 +16,7 @@ release:
   # Default is false.
   prerelease: true
 
-  # What to do with the release notes in case there the release already exists.
+  # What to do with the release notes in case the release already exists.
   #
   # Valid options are:
   # - `keep-existing`: keep the existing notes
@@ -46,8 +46,8 @@ release:
 scoop:
   name: QuantStopTerminal
   commit_author:
-    name: goreleaserbot
-    email: bot@goreleaser.com
+    name: sudoshu
+    email: sudoshu@protonmail.com
   commit_msg_template: Scoop update for {{ .ProjectName }} version {{ .Tag }}
   goamd64: v1
 builds:
@@ -96,12 +96,9 @@ archives:
       windows: Windows
     format: tar.gz
     files:
-      - src: license*
       - src: LICENSE*
-      - src: readme*
       - src: README*
-      - src: changelog*
-      - src: CHANGELOG*
+      - src: ./docs/CHANGELOG*
 snapshot:
   name_template: '{{ incpatch .Version }}-next'
 checksum:
@@ -128,7 +125,7 @@ changelog:
   # Sorts the changelog by the commits messages.
   # Could either be asc, desc or empty
   # Default is empty
-  sort: asc
+  sort: desc
 
   # Group commits messages by given regex and title.
   # Order value defines the order of the groups.
