@@ -1,3 +1,10 @@
+## [0.2.1](https://github.com/QuantStop/QuantStopTerminal/compare/v0.2.0...v0.2.1) (2022-10-01)
+
+
+### Bug Fixes
+
+* **ci:** build and release workflow ([278f770](https://github.com/QuantStop/QuantStopTerminal/commit/278f770868e43627f02fe2d7acf769a322c0f4e2))
+
 # [0.2.0](https://github.com/QuantStop/QuantStopTerminal/compare/v0.1.6...v0.2.0) (2022-10-01)
 
 
