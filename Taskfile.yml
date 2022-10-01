@@ -23,13 +23,13 @@ tasks:
     desc: Install all developer depencies for this project
     cmds:
       - task: install-go-releaser
-      - task: npm install
+      - npm install
 
   run:
     desc: Run the project in dev mode
     dir: ./
     cmds:
-      - air -c ./config/.air.toml
+      - air -c .air.toml
 
   build:
     desc: Build the project

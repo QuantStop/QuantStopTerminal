@@ -10,6 +10,23 @@ release:
   # Default is `{{.Tag}}` on OSS and `{{.PrefixedTag}}` on Pro.
   name_template: '{{.Tag}}'
 
+  # If set to auto, will mark the release as not ready for production
+  # in case there is an indicator for this in the tag e.g. v1.0.0-rc1
+  # If set to true, will mark the release as not ready for production.
+  # Default is false.
+  prerelease: true
+
+  # What to do with the release notes in case there the release already exists.
+  #
+  # Valid options are:
+  # - `keep-existing`: keep the existing notes
+  # - `append`: append the current release notes to the existing notes
+  # - `prepend`: prepend the current release notes to the existing notes
+  # - `replace`: replace existing notes
+  #
+  # Default is `keep-existing`.
+  mode: append
+
   # Header template for the release body.
   # Defaults to empty.
   header: |
@@ -120,16 +137,16 @@ changelog:
   #
   # Default is no groups.
   groups:
-    - title: Dependency updates
+    - title: '⚙ Dependency updates '
       regexp: "^.*(feat|fix)\\(deps\\)*:+.*$"
       order: 300
-    - title: 'New Features'
+    - title: '✨ New Features'
       regexp: "^.*feat[(\\w)]*:+.*$"
       order: 100
-    - title: 'Bug fixes'
+    - title: '🐞 Bug fixes'
       regexp: "^.*fix[(\\w)]*:+.*$"
       order: 200
-    - title: 'Documentation updates'
+    - title: '📚 Documentation updates'
       regexp: "^.*docs[(\\w)]*:+.*$"
       order: 400
     - title: Other work

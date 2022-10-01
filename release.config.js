@@ -13,7 +13,7 @@ module.exports = {
         [
             '@semantic-release/changelog',
             {
-                changelogFile: 'CHANGELOG.md'
+                changelogFile: 'docs/CHANGELOG.md'
             }
         ],
         '@semantic-release/github',
