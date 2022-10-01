@@ -63,15 +63,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           #NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: task release
-
-      # Run go-semantic-release tool https://github.com/go-semantic-release/action
-      # - name: Semantic Release
-        # uses: go-semantic-release/action@v1
-        # id: semrel
-          # with:
-          # github-token: ${{ secrets.GITHUB_TOKEN }}
-          # prerelease: true
-          # allow-initial-development-versions: true
-        # hooks: task release
-          # env:
-        # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
