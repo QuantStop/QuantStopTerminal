@@ -29,18 +29,17 @@ tasks:
     desc: Run the project in dev mode
     dir: ./
     cmds:
-      - air -c .air.toml
+      - air -c ./.configs/.air.toml
 
   build:
     desc: Build the project
     cmds:
-      - goreleaser build --rm-dist
+      - goreleaser build -f ./.configs/.goreleaser.yaml --rm-dist
 
   release:
     desc: Release the project
     cmds:
-      - npm run semantic-release
-      - goreleaser release --rm-dist
+      - npx -p @semantic-release/changelog -p @semantic-release/exec -p @semantic-release/git semantic-release
 
   install-go-releaser:
     desc: Install GoReleaser - https://goreleaser.com/

@@ -1,0 +1,10 @@
+preset: angular
+plugins:
+  - "@semantic-release/commit-analyzer"
+  - "@semantic-release/release-notes-generator"
+  - "@semantic-release/changelog"
+  - "@semantic-release/git"
+  - - "@semantic-release/exec"
+    - publishCmd: |
+        echo "${nextRelease.notes}" > /docs/CHANGELOG.md
+        goreleaser release -f ./.configs/.goreleaser.yaml --release-notes /docs/CHANGELOG.md --rm-dist
