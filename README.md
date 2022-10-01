@@ -43,17 +43,14 @@ Connect multiple free data sources and broker accounts to perform analysis, deve
 learn about quantitative analysis, and much more.
 
 ### Built With:
-[![Go][go-img]][go-url] &nbsp; &nbsp; &nbsp; &nbsp;
 [![VueJs][vue-img]][vue-url]
+[![Go][go-img]][go-url]
 
 <!-- GETTING STARTED -->
 ## Getting Started
 
-To download the application visit [Quantstop.com](https://quantstop.com)
+To get the application download the latest [release](https://github.com/QuantStop/QuantStopTerminal/releases)
 <br>
-
-Use this space to show useful examples of how a project can be used. 
-Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
 
 
 <!-- CONTRIBUTING -->
@@ -95,7 +92,7 @@ Distributed under the MIT License. See the full [LICENSE](assets/licenses/Eula_e
 [logo-url]: https://quantstop.com
 [product-screenshot]: assets/images/screenshot.png
 
-[go-img]: assets/images/go-logo-white.svg
+[go-img]: assets/images/go-logo.png
 [go-url]: https://go.dev/
 
 [vue-img]: assets/images/vuejs-logo.png
