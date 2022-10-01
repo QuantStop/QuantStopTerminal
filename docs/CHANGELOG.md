@@ -1,3 +1,13 @@
+## [0.2.7](https://github.com/quantstop/quantstopterminal/compare/v0.2.6...v0.2.7) (2022-10-01)
+
+
+### Bug Fixes
+
+* **ci:** semantic-release config ([a80ccef](https://github.com/quantstop/quantstopterminal/commit/a80ccef2300c2137f3c55f6390e3e51b4b4ad2b4))
+* **ci:** semantic-release config ([5315a11](https://github.com/quantstop/quantstopterminal/commit/5315a11366c953742da59cb7109fc5f4b2d73007))
+* **ci:** semantic-release config ([16082e4](https://github.com/quantstop/quantstopterminal/commit/16082e4165fa9caaa7a3f0e4cba2ca5f64e78ecf))
+* **ci:** semantic-release config ([4f24295](https://github.com/quantstop/quantstopterminal/commit/4f24295c05aae5091f8a85d21611a37a5368f3be))
+
 ## [0.2.6](https://github.com/QuantStop/QuantStopTerminal/compare/v0.2.5...v0.2.6) (2022-10-01)
 
 
