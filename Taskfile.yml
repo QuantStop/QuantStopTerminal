@@ -39,7 +39,6 @@ tasks:
   release:
     desc: Release the project
     cmds:
-      - npx semantic-release
       - goreleaser
 
   npm-install:
