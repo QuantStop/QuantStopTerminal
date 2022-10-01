@@ -31,8 +31,11 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
+<div align="center">
+
 [![Product Name Screen Shot][product-screenshot]](https://quantstop.com)
 
+</div>
 At QuantStop, we believe the average retail investor should have access to tools like the big players, 
 without paying a second mortgage.
 So we created QuantstopTerminal, an open source application for trading and analysis.
@@ -90,4 +93,4 @@ Distributed under the MIT License. See the full [LICENSE](assets/licenses/Eula_e
 
 [logo-img]: assets/images/qst.png
 [logo-url]: https://quantstop.com
-[product-screenshot]: web/src/assets/screenshot.png
+[product-screenshot]: assets/images/screenshot.png
