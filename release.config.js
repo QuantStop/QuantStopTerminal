@@ -1,6 +1,9 @@
 module.exports = {
     branches: [
-        { name: 'release', prerelease: true },
+        'release',
+        'next',
+        'next-major',
+        '+([0-9])?(.{+([0-9]),x}).x',
         { name: 'beta', prerelease: true },
         { name: 'alpha', prerelease: true },
     ],
