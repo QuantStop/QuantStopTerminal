@@ -6,11 +6,12 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --config ./web/vite.config.ts",
     "build": "run-p type-check build-only",
-    "preview": "vite preview --port 4173",
-    "build-only": "vite build",
-    "type-check": "vue-tsc --noEmit"
+    "preview": "vite --config web/vite.config.ts preview --port 4173",
+    "build-only": "vite build --config ./web/vite.config.ts ",
+    "type-check": "vue-tsc -p ./web/tsconfig.json --noEmit",
+    "semantic-release": "semantic-release"
   },
   "dependencies": {
     "vue": "^3.2.38",

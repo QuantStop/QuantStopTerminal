@@ -11,22 +11,40 @@
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
-# idea configs
-.idea/
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
 # node stuff
-/web/dist
-/web/node_modules
-/web/package-lock.json
+dist
+dist-ssr
+node_modules
 
 # internal go code from builds that we dont want included
-/internal/assets/appcode.go
+internal/assets/appcode.go
 
 # air go runner stuff
-tmp/
+tmp
 tmp/build-errors.log
 
 # go builds
-builds/
+builds
 
-dist/
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+.DS_Store
+coverage
+*.local
