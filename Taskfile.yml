@@ -39,7 +39,7 @@ tasks:
   release:
     desc: Release the project
     cmds:
-      - goreleaser
+      - goreleaser release --release-notes /tmp/release-notes.md --rm-dist
 
   npm-install:
     desc: Install NPM Dependencies
