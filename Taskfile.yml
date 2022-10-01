@@ -1,10 +1,10 @@
 version: '3'
 
 includes:
-  docker: ./scripts/taskfiles/DockerTasks.yml
-  windows: ./scripts/taskfiles/WindowsTasks.yml
-  linux: ./scripts/taskfiles/LinuxTasks.yml
-  frontend: ./scripts/taskfiles/FrontendTasks.yml
+  docker: ./.tasks/DockerTasks.yml
+  windows: ./.tasks/WindowsTasks.yml
+  linux: ./.tasks/LinuxTasks.yml
+  frontend: ./.tasks/FrontendTasks.yml
 
 vars:
   VERSION: 0.0.1
@@ -18,6 +18,12 @@ tasks:
     desc: Show available tasks for this project
     cmds:
       - task -l
+
+  deps:
+    desc: Install all developer depencies for this project
+    cmds:
+      - task: install-go-releaser
+      - task: install-semantic-release
 
   run:
     desc: Run the project in dev mode
@@ -35,10 +41,14 @@ tasks:
     deps: [ build ]
     cmds:
       - goreleaser release
+      - npx semantic-release
 
+  install-semantic-release:
+    desc: Install Semantic Release - https://github.com/semantic-release/semantic-release
+    cmds:
+      - npm install --save-dev semantic-release
 
-
-  dl-deps:
+  install-go-releaser:
     desc: Install GoReleaser - https://goreleaser.com/
     cmds:
       - go install github.com/goreleaser/goreleaser@latest

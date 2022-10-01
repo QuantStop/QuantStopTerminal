@@ -22,9 +22,6 @@
 # internal go code from builds that we dont want included
 /internal/assets/appcode.go
 
-# taskfile stuff
-.task/
-
 # air go runner stuff
 tmp/
 tmp/build-errors.log

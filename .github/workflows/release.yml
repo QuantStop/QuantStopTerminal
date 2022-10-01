@@ -36,32 +36,42 @@ jobs:
       - name: Fetch Tags
         run: git fetch --all
 
-      # Set up Go
+      # Set up Go actions
       - name: Set up Go
         uses: actions/setup-go@v3
         with:
           go-version: 1.19
           cache: true
 
-      # Set up NPM
-
+      # Set up Node.js actions
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 'lts/*'
 
       # Install Task tool - https://taskfile.dev/
       - name: Install Task tool
         run: go install github.com/go-task/task/v3/cmd/task@latest
 
-      # Run Release
-      #- name: Build
-      #  run: task release
+      # Install all dependencies using Task
+      - name: Install Dependencies
+        run: task deps
 
-      # Run go-semantic-release tool https://github.com/go-semantic-release/action
-      - name: Semantic Release
-        uses: go-semantic-release/action@v1
-        id: semrel
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          prerelease: true
-          allow-initial-development-versions: true
-          hooks: task release
+      # Run Release
+      - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          #NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: task release
+
+      # Run go-semantic-release tool https://github.com/go-semantic-release/action
+      # - name: Semantic Release
+        # uses: go-semantic-release/action@v1
+        # id: semrel
+          # with:
+          # github-token: ${{ secrets.GITHUB_TOKEN }}
+          # prerelease: true
+          # allow-initial-development-versions: true
+        # hooks: task release
+          # env:
+        # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
