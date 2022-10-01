@@ -20,40 +20,32 @@ tasks:
       - task -l
 
   run:
-    desc: Run the project
+    desc: Run the project in dev mode
     dir: ./
     cmds:
-      - air -c .air.toml
-
-  release:
-    desc: Release the project
-    deps: [ build ]
-    summary: |
-      Release the project to github
-
-      It will build your project before starting the release.
-      Please make sure that you have set GITHUB_TOKEN before starting.
-    cmds:
-      - goreleaser
+      - air -c ./config/.air.toml
 
   build:
     desc: Build the project
     cmds:
       - goreleaser build --rm-dist
 
-  clean:
-    desc: Clean the project
+  release:
+    desc: Release the project
+    deps: [ build ]
     cmds:
-      - task: windows:clean-win-amd64
-      - task: windows:clean-win-386
+      - goreleaser release
+
+
 
   dl-deps:
-    desc: Install tools required to build this app
+    desc: Install GoReleaser - https://goreleaser.com/
     cmds:
       - go install github.com/goreleaser/goreleaser@latest
-      - task: go-get
-        vars: { REPO: github.com/go-semantic-release/semantic-release }
 
-  go-get:
+  print-os:
     cmds:
-      - go get -u {{.REPO}}
+      - echo '{{OS}} {{ARCH}}'
+      - echo '{{if eq OS "windows"}}windows-command{{else}}unix-command{{end}}'
+      # This will be path/to/file on Unix but path\to\file on Windows
+      - echo '{{fromSlash "path/to/file"}}'
