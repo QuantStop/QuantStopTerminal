@@ -5,7 +5,7 @@ name: Release
 on:
 
   push:
-    branches: [ master,release,beta,feature ]
+    branches: [ release ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
