@@ -23,7 +23,7 @@ tasks:
     desc: Install all developer depencies for this project
     cmds:
       - task: install-go-releaser
-      - task: install-semantic-release
+      - task: npm-install
 
   run:
     desc: Run the project in dev mode
@@ -40,12 +40,13 @@ tasks:
     desc: Release the project
     deps: [ build ]
     cmds:
-      - npx -p @semantic-release/changelog -p @semantic-release/exec -p @semantic-release/git semantic-release
+      - semantic-release
+      - goreleaser
 
-  install-semantic-release:
-    desc: Install Semantic Release - https://semantic-release.gitbook.io/semantic-release/
+  npm-install:
+    desc: Install NPM Dependencies
     cmds:
-      - npm install --save-dev semantic-release
+      - npm install
 
   install-go-releaser:
     desc: Install GoReleaser - https://goreleaser.com/
