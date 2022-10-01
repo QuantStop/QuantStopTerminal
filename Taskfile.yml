@@ -38,7 +38,6 @@ tasks:
 
   release:
     desc: Release the project
-    deps: [ build ]
     cmds:
       - npx semantic-release
       - goreleaser
