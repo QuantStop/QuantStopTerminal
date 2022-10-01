@@ -50,8 +50,8 @@ jobs:
         env:
           # Use custom release token and set git names for semantic-release
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-          GIT_AUTHOR_NAME: @sudoshu
+          GIT_AUTHOR_NAME: sudoshu
           GIT_AUTHOR_EMAIL: sudoshu@protonmail.com
-          GIT_COMMITTER_NAME: @sudoshu
+          GIT_COMMITTER_NAME: sudoshu
           GIT_COMMITTER_EMAIL: sudoshu@protonmail.com
         run: task release
