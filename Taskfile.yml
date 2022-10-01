@@ -23,7 +23,7 @@ tasks:
     desc: Install all developer depencies for this project
     cmds:
       - task: install-go-releaser
-      - task: npm-install
+      - task: npm install
 
   run:
     desc: Run the project in dev mode
@@ -39,12 +39,8 @@ tasks:
   release:
     desc: Release the project
     cmds:
+      - npm run semantic-release
       - goreleaser release --rm-dist
-
-  npm-install:
-    desc: Install NPM Dependencies
-    cmds:
-      - npm install
 
   install-go-releaser:
     desc: Install GoReleaser - https://goreleaser.com/

@@ -46,14 +46,8 @@ jobs:
       - name: Install Dependencies
         run: task deps
 
-      # Run Semantic-Release to generate new tags
+      # Run Release Task
       - name: Release
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: npm run semantic-release
-
-      # Run GoReleaser to generate artifacts and create release
-      - name: GoReleaser
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         run: task release
