@@ -39,7 +39,8 @@ tasks:
   release:
     desc: Release the project
     cmds:
-      - npx -p @semantic-release/changelog -p @semantic-release/exec -p @semantic-release/git semantic-release
+      - npm run semantic-release
+      - goreleaser release -f ./.configs/.goreleaser.yaml --rm-dist
 
   install-go-releaser:
     desc: Install GoReleaser - https://goreleaser.com/
