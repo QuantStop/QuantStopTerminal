@@ -57,3 +57,4 @@ jobs:
           update-file: ./web/package.json
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          CGO_ENABLED: 1

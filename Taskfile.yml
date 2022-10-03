@@ -40,7 +40,9 @@ tasks:
   release:
     desc: Release the project
     cmds:
+      - task: frontend:lint
       - task: frontend:build
+      - task: go test -v ./...
       - task: frontend:semantic-release
       - goreleaser release --rm-dist
 
