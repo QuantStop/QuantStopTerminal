@@ -29,20 +29,20 @@ tasks:
     desc: Run the project in dev mode
     dir: ./
     cmds:
-      - air -c ./.configs/.air.toml
+      - air -c .air.toml
 
   build:
     desc: Build the project without releasing
     cmds:
       - task: frontend:build
-      - goreleaser release -f ./.configs/.goreleaser.yaml --rm-dist --snapshot
+      - goreleaser release --rm-dist --snapshot
 
   release:
     desc: Release the project
     cmds:
       - task: frontend:build
       - task: frontend:semantic-release
-      - goreleaser release -f ./.configs/.goreleaser.yaml --rm-dist
+      - goreleaser release --rm-dist
 
   install-go-releaser:
     desc: Install GoReleaser - https://goreleaser.com/
