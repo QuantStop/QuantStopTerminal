@@ -3,38 +3,44 @@ version: '3'
 tasks:
 
   install:
-    desc: Executes 'npm install'
+    desc: Frontend Project Setup
     dir: ./web
     cmds:
       - npm install
 
   dev:
-    desc: Executes 'npm run dev'
+    desc: Frontend Compile and Hot-Reload for Development
     dir: ./web
     cmds:
       - npm run dev
 
   build:
-    desc: Executes 'npm run build'
+    desc: Frontend Type-Check, Compile and Minify for Production
     dir: ./web
     cmds:
       - npm run build
 
-  build-only:
-    desc: Executes 'npm run build-only'
+  test-unit:
+    desc: Run Unit Tests with Vitest
     dir: ./web
     cmds:
-      - npm run build-only
+      - npm run test:unit
 
-  type-check:
-    desc: Executes 'npm run type-check'
+  test-e2e:
+    desc: Run End-to-End Tests with Cypress
     dir: ./web
     cmds:
-      - npm run type-check
+      - task: build
+      - npm run test:e2e # or `npm run test:e2e:ci` for headless testing
 
+  lint:
+    desc: Lint with ESLint
+    dir: ./web
+    cmds:
+      - npm run lint
 
   semantic-release:
-    desc: Executes 'npm run semantic-release'
+    desc: Run Semantic-Release (used in github action)
     dir: ./web
     cmds:
       - npm run semantic-release

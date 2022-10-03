@@ -74,9 +74,6 @@ Distributed under the MIT License. See the full [LICENSE](assets/licenses/Eula_e
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-
-
-<!-- badges -->
 [build-status-url]: https://github.com/quantstop/quantstopterminal/actions/workflows/release.yml/badge.svg?branch=release
 [build-status-img]: https://github.com/quantstop/quantstopterminal/actions/workflows/release.yml/badge.svg?branch=release
 [license-url]: https://github.com/quantstop/quantstopterminal/blob/release/LICENSE
@@ -87,13 +84,11 @@ Distributed under the MIT License. See the full [LICENSE](assets/licenses/Eula_e
 [go-report-img]: https://goreportcard.com/badge/github.com/quantstop/quantstopterminal
 [twitter-url]: https://twitter.com/quantstop
 [twitter-img]: https://img.shields.io/badge/twitter-@QuantStop-wnZunKusqrz0QZNxE4Ag?logo=twitter&style=flat
-
-[logo-img]: assets/images/qst.png
 [logo-url]: https://quantstop.com
-[product-screenshot]: assets/images/screenshot.png
-
-[go-img]: assets/images/go-logo.png
+[logo-img]: assets/images/qst.png
 [go-url]: https://go.dev/
-
-[vue-img]: assets/images/vuejs-logo.png
+[go-img]: assets/images/go-logo.png
 [vue-url]: https://vuejs.org/
+[vue-img]: assets/images/vuejs-logo.png
+
+[product-screenshot]: assets/images/screenshot.png
