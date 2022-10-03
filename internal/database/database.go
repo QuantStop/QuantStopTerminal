@@ -22,7 +22,7 @@ var (
 //MigrationDir = filepath.Join("..", "..", "database", "migrations")
 
 // SupportedDrivers slice of supported database driver types
-//SupportedDrivers = []string{DBSQLite, DBSQLite3, DBPostgreSQL, DBMySQL}
+// SupportedDrivers = []string{DBSQLite, DBSQLite3, DBPostgreSQL, DBMySQL}
 )
 
 type Database struct {
@@ -166,15 +166,22 @@ func NewDatabase(config *Config) (*Database, error) {
 }
 
 // Start spawns the main process done by the service.
-func (db *Database) Start(group *sync.WaitGroup) {
-	db.Service.Start(group)
-	t := time.NewTicker(time.Second * 5)
+func (db *Database) Start(group *sync.WaitGroup) error {
+	if err := db.Service.Start(group); err != nil {
+		return err
+	}
+	go db.Run(group)
 	log.Debugln(log.Webserver, db.GetName()+service.MsgServiceStarted)
+	return nil
+}
+
+func (db *Database) Run(wg *sync.WaitGroup) {
+	t := time.NewTicker(time.Second * 5)
 
 	// This function runs when the for loop returns
 	defer func() {
 		t.Stop()
-		group.Done()
+		wg.Done()
 		log.Debugln(log.Database, db.GetName()+service.MsgServiceShutdown)
 	}()
 

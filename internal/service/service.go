@@ -46,29 +46,29 @@ func NewService(name string, enabled bool) *Service {
 	}
 }
 
-// Start is the main process for the service, run as a goroutine in the provided WaitGroup
-func (service *Service) Start(wg *sync.WaitGroup) {
+// Start spawns all processes done by the service.
+func (service *Service) Start(wg *sync.WaitGroup) error {
 	if service == nil {
-		log.Errorf(log.Global, "%s service %w", service.name, ErrNilService)
+		return fmt.Errorf("%s service %w", service.name, ErrNilService)
 	}
 	if !service.enabled {
-		log.Errorf(log.Global, "%s service %w", service.name, ErrServiceNotEnabled)
+		return fmt.Errorf("%s service %w", service.name, ErrServiceNotEnabled)
 	}
 	if wg == nil {
-		log.Errorf(log.Global, "%s service %w", service.name, ErrServiceNilWaitGroup)
+		return fmt.Errorf("%s service %w", service.name, ErrServiceNilWaitGroup)
 	}
 	if service.started {
-		log.Errorf(log.Global, "%s service %w", service.name, ErrServiceAlreadyStarted)
+		return fmt.Errorf("%s service %w", service.name, ErrServiceAlreadyStarted)
 	}
 	service.started = true
 	log.Debugln(log.Global, service.name+MsgServiceStarting)
+	return nil
 }
 
-func (service *Service) Run(wg *sync.WaitGroup) {
+// Run is the main thread of the process as a goroutine
+func (service *Service) Run(wg *sync.WaitGroup) {}
 
-}
-
-// Stop The function to stop the service
+// Stop terminates all processes belonging to the service, blocking until they are all terminated.
 func (service *Service) Stop() error {
 	if service == nil {
 		return fmt.Errorf("%s service %w", service.name, ErrNilService)

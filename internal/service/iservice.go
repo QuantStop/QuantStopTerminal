@@ -7,7 +7,10 @@ import "sync"
 type IService interface {
 
 	// Start spawns all processes done by the service.
-	Start(wg *sync.WaitGroup)
+	Start(wg *sync.WaitGroup) error
+
+	// Run is the main thread of the process as a goroutine
+	Run(wg *sync.WaitGroup)
 
 	// Stop terminates all processes belonging to the service, blocking until they are all terminated.
 	Stop() error

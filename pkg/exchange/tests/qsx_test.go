@@ -1,6 +1,6 @@
 package tests
 
-import (
+/*import (
 	quantstopexchange "github.com/quantstop/quantstopterminal/pkg/exchange"
 	"github.com/quantstop/quantstopterminal/pkg/exchange/qsx"
 	"testing"
@@ -24,3 +24,4 @@ func TestNewClient(t *testing.T) {
 		t.Logf("Exchange Name: %v", ex.GetName())
 	}
 }
+*/

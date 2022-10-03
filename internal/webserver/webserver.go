@@ -13,7 +13,6 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-
 	"sync"
 	"time"
 )
@@ -68,12 +67,21 @@ func NewWebserver(config *Config, db *database.Database) (*Webserver, error) {
 }
 
 // Start is the main process for the service, run as a goroutine.
-func (s *Webserver) Start(serviceWG *sync.WaitGroup) {
-	s.Service.Start(serviceWG)
+func (s *Webserver) Start(serviceWG *sync.WaitGroup) error {
+	if err := s.Service.Start(serviceWG); err != nil {
+		return err
+	}
 
 	// run websocket server
 	go s.Hub.Run(serviceWG)
 
+	// run http server
+	go s.Run(serviceWG)
+
+	return nil
+}
+
+func (s *Webserver) Run(serviceWG *sync.WaitGroup) {
 	// if dev mode, run node server
 	if s.DevMode {
 		go s.StartNodeDevelopmentServer(serviceWG)
@@ -97,7 +105,7 @@ func (s *Webserver) Start(serviceWG *sync.WaitGroup) {
 			err = nil // expected error after calling Server.Shutdown()
 			log.Infof(log.Webserver, s.GetName()+" stopped listening on https://%v.\n", s.HttpListenAddr)
 		} else if err != nil {
-			log.Errorf(log.Webserver, "unexpected error from ListenAndServe: %w", err)
+			log.Errorf(log.Webserver, "unexpected error from ListenAndServe: %s", err)
 		}
 	} else {
 		log.Debugln(log.Webserver, s.GetName()+service.MsgServiceStarted)
@@ -109,7 +117,7 @@ func (s *Webserver) Start(serviceWG *sync.WaitGroup) {
 			err = nil // expected error after calling Server.Shutdown()
 			log.Infof(log.Webserver, s.GetName()+" stopped listening on http://%v.\n", s.HttpListenAddr)
 		} else if err != nil {
-			log.Errorf(log.Webserver, "unexpected error from ListenAndServe: %w", err)
+			log.Errorf(log.Webserver, "unexpected error from ListenAndServe: %s", err)
 		}
 	}
 	// anything here won't run until the Service.Shutdown channel is closed

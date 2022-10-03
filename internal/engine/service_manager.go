@@ -157,8 +157,9 @@ func (s *ServiceManager) Start(name string) error {
 			}
 			log.Debugf(log.Global, "Starting service type %v", kind)
 			s.ServiceWG.Add(1)
-			go s.services[kind].Start(s.ServiceWG)
-			return nil
+			if err := s.services[kind].Start(s.ServiceWG); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -186,7 +187,9 @@ func (s *ServiceManager) StartAll() error {
 		}
 		log.Debugf(log.Global, "Starting service type %v", kind)
 		s.ServiceWG.Add(1)
-		go s.services[kind].Start(s.ServiceWG)
+		if err := s.services[kind].Start(s.ServiceWG); err != nil {
+			return err
+		}
 	}
 	return nil
 }

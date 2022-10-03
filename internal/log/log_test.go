@@ -31,7 +31,7 @@ func TestMain(m *testing.M) {
 }
 
 func setupTestLoggers() error {
-	logTest := Config{
+	logTest := &Config{
 		Enabled: convert.BoolPtr(true),
 		SubLoggerConfig: SubLoggerConfig{
 			Output: "console",
@@ -55,13 +55,7 @@ func setupTestLoggers() error {
 				Output: "stdout",
 			}},
 	}
-	RWM.Lock()
-	GlobalLogConfig = &logTest
-	RWM.Unlock()
-	if err := SetupGlobalLogger(); err != nil {
-		return err
-	}
-	return SetupSubLoggers(logTest.SubLoggers)
+	return Initialize(logTest)
 }
 
 func SetupDisabled() error {
