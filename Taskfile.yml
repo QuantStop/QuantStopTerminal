@@ -42,7 +42,7 @@ tasks:
     cmds:
       - task: frontend:lint
       - task: frontend:build
-      - task: go test -v ./...
+      - go test -v ./...
       - task: frontend:semantic-release
       - goreleaser release --rm-dist
 
