@@ -18,16 +18,6 @@ jobs:
   #        go-version: 1.18
   #    - uses: golangci/golangci-lint-action@v3
 
-  frontend:
-    name: Build and test frontend
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 'lts/*'
-      - run: cd ./web && npm install && npm run lint && npm run build
-
   build:
     name: Build and Test
     runs-on: ${{ matrix.os }}
@@ -55,6 +45,10 @@ jobs:
       - uses: actions/setup-go@v3
         with:
           go-version: 1.19
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 'lts/*'
+      - run: cd ./web && npm install && npm run lint && npm run build
       - uses: go-semantic-release/action@v1
         id: semrel
         with:
