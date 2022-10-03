@@ -48,7 +48,7 @@ jobs:
       - uses: go-semantic-release/action@v1
         id: semrel
         with:
-          hooks: goreleaser -f ./.configs/.goreleaser.yaml
+          hooks: goreleaser
           prerelease: true
           update-file: ./web/package.json
         env:
