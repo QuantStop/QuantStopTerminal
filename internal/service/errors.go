@@ -6,8 +6,8 @@ var (
 	// ErrServiceAlreadyStarted message to return when a service is called to start but is already running.
 	ErrServiceAlreadyStarted = errors.New("service already started")
 
-	// ErrServiceNotStarted message to return when service not started.
-	ErrServiceNotStarted = errors.New("service not started")
+	// ErrServiceAlreadyStopped message to return when a service is called to stop but is already stopped.
+	ErrServiceAlreadyStopped = errors.New("service already stopped")
 
 	// ErrNilService is returned when service functions are called but the service is not instantiated.
 	ErrNilService = errors.New("service not setup")
@@ -15,8 +15,8 @@ var (
 	// ErrServiceNotEnabled is returned when a service is called to start but is not enabled.
 	ErrServiceNotEnabled = errors.New("service not enabled")
 
-	// ErrServiceNotInitialized is returned when a service is called to start but has not been initialized.
-	ErrServiceNotInitialized = errors.New("service not initialized")
+	// ErrSubsystemNotEnabled is returned when a subsystem can't be found
+	ErrSubsystemNotEnabled = errors.New("subsystem not enabled")
 
 	// ErrServiceNotFound is returned when a service can not be found.
 	ErrServiceNotFound = errors.New("service not found")

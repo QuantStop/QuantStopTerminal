@@ -1,0 +1,5 @@
+package qsx
+
+/*var (
+	ErrUnknownExchange =
+)*/

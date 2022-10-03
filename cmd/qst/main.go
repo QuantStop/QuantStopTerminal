@@ -6,24 +6,38 @@ import (
 )
 
 var (
-	// these will be replaced by the release process using ldflags
+	// these will be replaced by the build process using ldflags
 	version = "0.0.0"
 	commit  = "0000000"
 	date    = "0001-01-01T00:00:00Z"
+
+	// bot instance
+	bot *engine.Engine
+
+	// bot error
+	err error
 )
 
 func main() {
 
-	log.Debugf(log.Global, "Creating Engine v%s %s (%s)\n", version, commit, date)
-	err, bot := engine.NewEngine(version, commit, date)
-	if err != nil {
-		log.Fatalf(log.Global, "Creating Engine ... Error: %s\n", err)
+	// create the engine
+	if bot, err = engine.NewEngine(version, commit, date); err != nil {
+		log.Fatalf("Error creating engine: %s\n", err)
 	}
-	log.Debugln(log.Global, "Engine created.")
 
-	log.Debugln(log.Global, "Starting Engine ...")
-	bot.Start()
+	// start the engine
+	if err = bot.Start(); err != nil {
+		log.Fatalf("Error starting engine: %s\n", err)
+	}
 
-	log.Debugln(log.Global, "Engine started.")
-	bot.WaitForInterrupt()
+	// block until interrupt is received
+	if err = bot.WaitForInterrupt(); err != nil {
+		log.Fatalf("Error waiting for interrupt: %s\n", err)
+	}
+
+	// stop the engine
+	if err = bot.Stop(); err != nil {
+		log.Fatalf("Error stopping engine: %s\n", err)
+	}
+
 }

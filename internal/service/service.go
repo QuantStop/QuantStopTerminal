@@ -7,49 +7,31 @@ import (
 )
 
 const (
-	// MsgServiceInitializing message to return when subsystem is initializing.
-	MsgServiceInitializing = " subsystem initializing..."
+	// MsgServiceInitializing message to return when service is initializing.
+	MsgServiceInitializing = " service initializing..."
 
-	// MsgServiceInitialized message to return when subsystem has initialized.
-	MsgServiceInitialized = " subsystem initializing... Success."
+	// MsgServiceInitialized message to return when service has initialized.
+	MsgServiceInitialized = " service initializing... Success."
 
-	// MsgServiceStarting message to return when subsystem is starting up.
-	MsgServiceStarting = " subsystem starting..."
+	// MsgServiceStarting message to return when service is starting up.
+	MsgServiceStarting = " service starting..."
 
-	// MsgServiceStarted message to return when subsystem has started.
-	MsgServiceStarted = " subsystem starting... Success."
+	// MsgServiceStarted message to return when service has started.
+	MsgServiceStarted = " service starting... Success."
 
-	// MsgServiceShuttingDown message to return when a subsystem is shutting down.
-	MsgServiceShuttingDown = " subsystem shutting down..."
+	// MsgServiceShuttingDown message to return when a service is shutting down.
+	MsgServiceShuttingDown = " service shutting down..."
 
-	// MsgServiceShutdown message to return when a subsystem has shutdown.
-	MsgServiceShutdown = " subsystem shutting down ... Success"
+	// MsgServiceShutdown message to return when a service has shutdown.
+	MsgServiceShutdown = " service shutting down ... Success"
 )
-
-// IService exports an interface to the Service type.
-type IService interface {
-
-	// Start spawns all processes done by the service.
-	Start(wg *sync.WaitGroup)
-
-	// Stop terminates all processes belonging to the service, blocking until they are all terminated.
-	Stop() error
-
-	// IsRunning returns true if the service is currently running.
-	IsRunning() bool
-
-	// IsEnabled returns true if the service is allowed to run.
-	IsEnabled() bool
-
-	// GetName returns the name of the service.
-	GetName() string
-}
 
 // Service is the base type for all services defined in the project.
 type Service struct {
 	name     string
 	enabled  bool
 	started  bool
+	lastErr  error
 	Shutdown chan struct{}
 }
 
@@ -67,16 +49,16 @@ func NewService(name string, enabled bool) *Service {
 // Start is the main process for the service, run as a goroutine in the provided WaitGroup
 func (service *Service) Start(wg *sync.WaitGroup) {
 	if service == nil {
-		log.Errorf(log.Global, "%s subsystem %w", service.name, ErrNilService)
+		log.Errorf(log.Global, "%s service %w", service.name, ErrNilService)
 	}
 	if !service.enabled {
-		log.Errorf(log.Global, "%s subsystem %w", service.name, ErrServiceNotEnabled)
+		log.Errorf(log.Global, "%s service %w", service.name, ErrServiceNotEnabled)
 	}
 	if wg == nil {
-		log.Errorf(log.Global, "%s subsystem %w", service.name, ErrServiceNilWaitGroup)
+		log.Errorf(log.Global, "%s service %w", service.name, ErrServiceNilWaitGroup)
 	}
 	if service.started {
-		log.Errorf(log.Global, "%s subsystem %w", service.name, ErrServiceAlreadyStarted)
+		log.Errorf(log.Global, "%s service %w", service.name, ErrServiceAlreadyStarted)
 	}
 	service.started = true
 	log.Debugln(log.Global, service.name+MsgServiceStarting)
@@ -85,10 +67,10 @@ func (service *Service) Start(wg *sync.WaitGroup) {
 // Stop The function to stop the service
 func (service *Service) Stop() error {
 	if service == nil {
-		return fmt.Errorf("%s subsystem %w", service.name, ErrNilService)
+		return fmt.Errorf("%s service %w", service.name, ErrNilService)
 	}
 	if !service.started {
-		return fmt.Errorf("%s subsystem %w", service.name, ErrServiceNotStarted)
+		return fmt.Errorf("%s service %w", service.name, ErrServiceAlreadyStopped)
 	}
 	service.started = false
 	log.Debugln(log.Global, service.name+MsgServiceShuttingDown)
@@ -111,4 +93,8 @@ func (service *Service) IsEnabled() bool {
 // GetName returns the subsystems name
 func (service *Service) GetName() string {
 	return service.name
+}
+
+func (service *Service) Health() error {
+	return service.lastErr
 }

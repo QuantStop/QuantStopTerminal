@@ -1,12 +1,12 @@
 package engine
 
 import (
+	"errors"
 	"fmt"
-	"github.com/quantstop/quantstopterminal/internal/database"
+	"github.com/quantstop/quantstopterminal/internal/engine/banner"
 	"github.com/quantstop/quantstopterminal/internal/engine/config"
 	"github.com/quantstop/quantstopterminal/internal/log"
 	"github.com/quantstop/quantstopterminal/internal/system"
-	"github.com/quantstop/quantstopterminal/internal/webserver"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -16,133 +16,136 @@ import (
 	"syscall"
 )
 
-var engineLock = &sync.Mutex{}
-var engineInstance *Engine
+var (
+	engineInstance   *Engine
+	engineLock       = &sync.Mutex{}
+	errEngineCreated = errors.New("engine instance already created")
+	errNilEngine     = errors.New("engine instance is nil")
+)
 
 type Engine struct {
+	*Version        // The engine version information
 	*config.Config  // Config for engine, and all services
 	*ServiceManager // Registry of all services
-	sync.WaitGroup  // Service WaitGroup
 }
 
-func NewEngine(version, commit, date string) (error, *Engine) {
+// NewEngine creates a new engine, and all services
+func NewEngine(version, commit, date string) (*Engine, error) {
+	var err error
+
+	// singleton pattern enforces that the engine is created only once
 	if engineInstance == nil {
 		engineLock.Lock()
 		defer engineLock.Unlock()
 		if engineInstance == nil {
 
-			var err error
+			// parse command line flags
+			// ToDo: implement flags?
 
-			engineInstance = &Engine{}
+			// create engine
+			engineInstance = &Engine{
+				Version: CreateVersion(version, date, commit, false, true, true),
+			}
 
-			log.Debugln(log.Global, "Creating Config ...")
+			// create config
 			if engineInstance.Config, err = config.NewConfig(); err != nil {
-				return err, nil
+				return nil, err
 			}
 
-			log.Debugln(log.Global, "Verifying Config ...")
-			if err = engineInstance.Config.CheckConfig(); err != nil {
-				log.Errorf(log.Global, "Error checking config: %s\n", err)
+			// create logger
+			if err = log.Initialize(engineInstance.LogConfig); err != nil {
+				return nil, err
 			}
 
-			log.Debugln(log.Global, "Creating ServiceManager ...")
-			engineInstance.ServiceManager = NewServiceManager()
-
-			log.Debugln(log.Global, "Registering Services ...")
-			if err = engineInstance.registerServices(); err != nil {
-				return err, nil
+			// log startup info
+			log.Infoln(log.Global, "Creating Engine ...")
+			log.Infof(log.Global, "\n"+banner.GetRandomBanner()+"\n"+engineInstance.Version.GetVersionString(false))
+			log.Infof(log.Global, "Using config dir: %s\n", engineInstance.ConfigDir)
+			if strings.Contains(engineInstance.LogConfig.Output, "file") {
+				log.Infof(log.Global, "Using log file: %s\n",
+					filepath.Join(log.FilePath, engineInstance.LogConfig.LoggerFileConfig.FileName))
 			}
 
-			// Set the bot version
-			//bot.Version = version
-
-			// Set the max processors for go
-			if err = system.AdjustGoMaxProcs(engineInstance.Config.GoMaxProcessors); err != nil {
-				return fmt.Errorf("unable to adjust runtime GOMAXPROCS value. Err: %s", err), nil
+			// log config info
+			if err = system.AdjustGoMaxProcs(engineInstance.GoMaxProcessors); err != nil {
+				return nil, fmt.Errorf("unable to adjust runtime GOMAXPROCS value. Err: %s", err)
 			}
 
-			// Print banner and version
-			//log.Infof(log.Global, "\n"+banner.GetRandomBanner()+"\n"+version.GetVersionString(false))
-
-			// Print info
-			log.Debugln(log.Global, "Logger initialized.")
-			log.Debugf(log.Global, "Using config dir: %s\n", engineInstance.Config.ConfigDir)
-			if strings.Contains(engineInstance.Config.Logger.Output, "file") {
-				log.Debugf(log.Global, "Using log file: %s\n",
-					filepath.Join(log.FilePath, engineInstance.Config.Logger.LoggerFileConfig.FileName))
+			// create service manager, and all services
+			if engineInstance.ServiceManager, err = NewServiceManager(engineInstance); err != nil {
+				return nil, err
 			}
+
+			log.Infoln(log.Global, "Creating Engine ... Success.")
 
 		} else {
-			log.Debug(log.Global, "Engine instance already created.")
+			return engineInstance, errEngineCreated
 		}
 	} else {
-		log.Debug(log.Global, "Engine instance already created.")
+		return engineInstance, errEngineCreated
 	}
-
-	return nil, engineInstance
+	return engineInstance, nil
 }
 
-func (bot *Engine) registerServices() (err error) {
+// Start the engine. Starts the application and all services.
+func (bot *Engine) Start() error {
+	log.Infoln(log.Global, "Starting Engine ...")
 
-	if err = bot.registerDatabaseService(); err != nil {
+	// set current uptime to now
+	engineLock.Lock()
+	// ToDO: implement
+	engineLock.Unlock()
+
+	// start all services
+	if err := bot.StartAll(); err != nil {
 		return err
 	}
 
-	if err = bot.registerWebserverService(); err != nil {
-		return err
+	// Print some info
+	cpus := bot.GoMaxProcessors
+	if bot.GoMaxProcessors == -1 {
+		cpus = runtime.NumCPU()
 	}
-
+	log.Infoln(log.Global, "Starting Engine ... Success.")
+	log.Infof(log.Global, "Using %d out of %d logical processors.\n", cpus, runtime.NumCPU())
 	return nil
 }
 
-func (bot *Engine) registerDatabaseService() error {
+// WaitForInterrupt is a blocking routine that returns when an operating system interrupt signal is received.
+func (bot *Engine) WaitForInterrupt() error {
+	log.Infoln(log.Global, "Waiting for interrupt to shutdown ...")
 
-	// Create Database
-	db, err := database.NewDatabase(bot.Config.Database)
-	if err != nil {
-		return err
-	}
-
-	// Register Database
-	if err = bot.RegisterService(db); err != nil {
-		return err
-	}
-
+	// main thread will block here until an interrupt is received
+	interrupt := system.WaitForInterrupt()
+	log.Infof(log.Global, "Captured '%v', requesting shutdown ...", interrupt)
 	return nil
 }
 
-func (bot *Engine) registerWebserverService() error {
+// Stop the engine. Stops all services and exits the application.
+func (bot *Engine) Stop() error {
+	log.Infoln(log.Global, "Stopping Engine ...")
 
-	// Fetch dependencies
-	var db *database.Database
-	if err := bot.FetchService(&db); err != nil {
-		log.Error(log.Global, err)
-	}
-
-	// Create Webserver
-	ws, err := webserver.NewWebserver(bot.Config.Webserver, db)
-	if err != nil {
-		return err
-	}
-
-	// Register Webserver
-	if err = bot.RegisterService(ws); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (bot *Engine) Start() {
-	bot.StartAll(&bot.WaitGroup)
-}
-
-func (bot *Engine) Stop() {
+	// stop all services
 	bot.StopAll()
-	bot.WaitGroup.Wait()
+
+	// wait for services to gracefully shutdown
+	bot.ServiceManager.ServiceWG.Wait()
+
+	log.Infoln(log.Global, "Stopping Engine ... Success.")
+
+	// everything stopped, try closing log file
+	if err := log.CloseLogger(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
+// Restart the engine. Try's to restart the application.
 func (bot *Engine) Restart() error {
+	if bot == nil {
+		return errNilEngine
+	}
 	self, err := os.Executable()
 	if err != nil {
 		return err
@@ -163,12 +166,4 @@ func (bot *Engine) Restart() error {
 		return err
 	}
 	return syscall.Exec(self, args, env)
-}
-
-func (bot *Engine) WaitForInterrupt() {
-	// Wait for system interrupt to stop the bot
-	interrupt := system.WaitForInterrupt()
-	log.Infof(log.Global, "Captured %v, shutdown requested.", interrupt)
-	bot.Stop()
-	log.Infof(log.Global, "Exiting.")
 }

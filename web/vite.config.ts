@@ -5,8 +5,8 @@ import vue from '@vitejs/plugin-vue'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  root: "./web",
-  publicDir: "./web/public",
+  root: "./",
+  publicDir: "./public",
 
   plugins: [vue()],
   resolve: {

@@ -44,7 +44,7 @@ func NewConfig() *Config {
 		Enabled: convert.BoolPtr(true),
 		SubLoggerConfig: SubLoggerConfig{
 			Level:  "INFO|DEBUG|WARN|ERROR",
-			Output: "console",
+			Output: "console|file",
 		},
 		LoggerFileConfig: &loggerFileConfig{
 			FileName: "log.txt",

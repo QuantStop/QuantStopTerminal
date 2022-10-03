@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"sync"
 	"time"
 )
@@ -17,7 +16,7 @@ var (
 )
 
 const (
-	timestampFormat = " 02/01/2006 15:04:05 "
+	timestampFormat = "02/01/2006 15:04:05"
 	spacer          = " | "
 	// DefaultMaxFileSize for logger rotation file
 	DefaultMaxFileSize int64 = 100
@@ -34,7 +33,7 @@ var (
 	FileLoggingConfiguredCorrectly bool
 
 	// GlobalLogConfig holds global configuration options for logger
-	GlobalLogConfig = NewConfig()
+	GlobalLogConfig = &Config{}
 
 	// GlobalLogFile hold global configuration options for file logger
 	GlobalLogFile = &Rotate{}
@@ -61,7 +60,7 @@ var (
 	Webserver *SubLogger
 )
 
-func init() {
+func Initialize(config *Config) error {
 
 	// register global sub loggers
 	Global = registerNewSubLogger("ENGINE")
@@ -75,13 +74,15 @@ func init() {
 
 	// setup default global logger
 	if err := SetupGlobalLogger(); err != nil {
-		log.Panicf("Unable to setup default global logger. Error: %s\n", err)
+		return err
 	}
 
 	// setup default global sub loggers
 	if err := SetupSubLoggers(GlobalLogConfig.SubLoggers); err != nil {
-		log.Panicf("Unable to setup default global sub loggers. Error: %s\n", err)
+		return err
 	}
+
+	return nil
 }
 
 // Logger represents a single Logger instance with settings

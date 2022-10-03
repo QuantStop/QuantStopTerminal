@@ -89,7 +89,7 @@ builds:
     binary: QuantStopTerminal
     builder: go
     gobinary: go
-    command: build
+    command: build -tags=prod
     ldflags:
       - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}} -X main.builtBy=goreleaser
     env:

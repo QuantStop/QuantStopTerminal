@@ -2,30 +2,39 @@ version: '3'
 
 tasks:
 
-  npm-install:
-    desc: Run 'npm install'
+  install:
+    desc: Executes 'npm install'
     dir: ./web
-    run: when_changed
-    sources:
-      - src/package.json
-      - src/package-lock.json
     cmds:
       - npm install
 
-  npm-build:
-    desc: Run 'npm build'
-    deps: [ npm-install ]
+  dev:
+    desc: Executes 'npm run dev'
     dir: ./web
-    run: when_changed
-    sources:
-      - src/*.js
-      - src/*.vue
-      - public/*.html
-      - src/**/*.js
-      - src/**/*.vue
-    generates:
-      - dist/**/*.css
-      - dist/**/*.js
-    method: timestamp
+    cmds:
+      - npm run dev
+
+  build:
+    desc: Executes 'npm run build'
+    dir: ./web
     cmds:
       - npm run build
+
+  build-only:
+    desc: Executes 'npm run build-only'
+    dir: ./web
+    cmds:
+      - npm run build-only
+
+  type-check:
+    desc: Executes 'npm run type-check'
+    dir: ./web
+    cmds:
+      - npm run type-check
+
+
+  semantic-release:
+    desc: Executes 'npm run semantic-release'
+    dir: ./web
+    cmds:
+      - npm run semantic-release

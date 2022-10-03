@@ -6,7 +6,7 @@ tmp_dir = "tmp"
   bin = "./tmp/qst.exe"
   cmd = 'go build -tags=dev -o ./tmp/qst.exe ./cmd/qst/'
   delay = 1000
-  exclude_dir = ["assets", "tmp", "vendor", "testdata", "internal\\assets", "web"]
+  exclude_dir = ["assets", "tmp", "vendor", "testdata", "internal\\assets", "web", "node_modules", "build", ".configs", ".github", ".idea", ".tasks", "deployment", "docs"]
   exclude_file = []
   exclude_regex = ["_test.go"]
   exclude_unchanged = false

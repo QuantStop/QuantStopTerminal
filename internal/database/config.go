@@ -1,14 +1,11 @@
 package database
 
+import (
+	"github.com/quantstop/quantstopterminal/internal/database/drivers"
+	"github.com/quantstop/quantstopterminal/internal/database/repository"
+)
+
 const (
-	// DBSQLite const string for sqlite across code base
-	DBSQLite = "sqlite"
-
-	// DBPostgreSQL const string for PostgreSQL across code base
-	DBPostgreSQL = "postgres"
-
-	// DBMySQL const string for MySQL across code base
-	DBMySQL = "mysql"
 
 	// DefaultCoreDatabase const string for name of core database (sqlite filename)
 	DefaultCoreDatabase = "qst.db"
@@ -37,31 +34,55 @@ const (
 
 // Config holds information for all databases
 type Config struct {
-	CoreConn *ConnectionDetails
-}
-
-// ConnectionDetails holds DSN information for a single database connection
-type ConnectionDetails struct {
-	Driver   string
-	Host     string
-	Port     uint16
-	Username string
-	Password string
-	Database string
-	SSLMode  string
+	CoreConfig         *repository.InstanceConfig
+	CoinbaseConfig     *repository.InstanceConfig
+	TDAmeritradeConfig *repository.InstanceConfig
 }
 
 // NewConfig Generate default settings for the Config struct
-func NewConfig() *Config {
+func NewConfig(configDir string) *Config {
 	return &Config{
-		CoreConn: &ConnectionDetails{
-			Driver:   DBSQLite,
-			Host:     DefaultHost,
-			Port:     DefaultPort,
-			Username: DefaultUsername,
-			Password: DefaultPassword,
-			Database: DefaultCoreDatabase,
-			SSLMode:  DefaultSSLMode,
+		CoreConfig: &repository.InstanceConfig{
+			Enabled:   true,
+			Verbose:   true,
+			Driver:    drivers.DBSQLite,
+			ConfigDir: configDir,
+			DSN: &drivers.ConnectionDetails{
+				Host:     DefaultHost,
+				Port:     DefaultPort,
+				Username: DefaultUsername,
+				Password: DefaultPassword,
+				Database: DefaultCoreDatabase,
+				SSLMode:  DefaultSSLMode,
+			},
+		},
+		CoinbaseConfig: &repository.InstanceConfig{
+			Enabled:   true,
+			Verbose:   true,
+			Driver:    drivers.DBSQLite,
+			ConfigDir: configDir,
+			DSN: &drivers.ConnectionDetails{
+				Host:     DefaultHost,
+				Port:     DefaultPort,
+				Username: DefaultUsername,
+				Password: DefaultPassword,
+				Database: DefaultCoinbaseDatabase,
+				SSLMode:  DefaultSSLMode,
+			},
+		},
+		TDAmeritradeConfig: &repository.InstanceConfig{
+			Enabled:   true,
+			Verbose:   true,
+			Driver:    drivers.DBSQLite,
+			ConfigDir: configDir,
+			DSN: &drivers.ConnectionDetails{
+				Host:     DefaultHost,
+				Port:     DefaultPort,
+				Username: DefaultUsername,
+				Password: DefaultPassword,
+				Database: DefaultTDAmeritradeDatabase,
+				SSLMode:  DefaultSSLMode,
+			},
 		},
 	}
 }

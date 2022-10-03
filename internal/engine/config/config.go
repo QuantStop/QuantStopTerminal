@@ -2,6 +2,7 @@ package config
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/quantstop/quantstopterminal/internal/database"
 	"github.com/quantstop/quantstopterminal/internal/log"
 	"github.com/quantstop/quantstopterminal/internal/system"
@@ -26,21 +27,16 @@ var (
 type Config struct {
 	ConfigDir       string
 	GoMaxProcessors int
-	Logger          *log.Config
-	Database        *database.Config
-	Webserver       *webserver.Config
+	LogConfig       *log.Config
+	DatabaseConfig  *database.Config
+	WebserverConfig *webserver.Config
 }
 
 func init() {
 	findPaths()
 }
 
-// Refresh will rediscover the config paths, checking current environment
-// variables again.
-//
-// This function is automatically called when the program initializes. If you
-// change the environment variables at run-time, though, you may call the
-// Refresh() function to reevaluate the config paths.
+// Refresh will rediscover the config paths
 func Refresh() {
 	findPaths()
 }
@@ -116,11 +112,11 @@ func NewConfig() (*Config, error) {
 	// Deal with a JSON configuration file in that folder.
 	configFile := filepath.Join(configPath, "settings.json")
 
-	// Does the file not exist?
+	// Does the file exist?
 	if _, err = os.Stat(configFile); os.IsNotExist(err) {
 
 		// Setup default config
-		config.SetupDefaultConfig(configPath)
+		config.setupDefaultConfig(configPath)
 
 		// Create the config file
 		fh, err := os.Create(configFile)
@@ -134,11 +130,11 @@ func NewConfig() (*Config, error) {
 		// Write config to file in json format
 		err = jsonUtils.PrettyEncodeJson(&config, fh)
 		if err != nil {
-			//log.Fatal(err)
-			log.Error(log.Global, err)
+			return nil, err
 		}
 
 	} else {
+
 		// Load the existing file.
 		fh, err := os.Open(configFile)
 		if err != nil {
@@ -155,36 +151,44 @@ func NewConfig() (*Config, error) {
 		}
 	}
 
+	// Verify config
+	if err = config.verifyConfig(); err != nil {
+		return nil, err
+	}
+
 	return config, nil
 }
 
-func (c *Config) SetupDefaultConfig(configDir string) {
+func (c *Config) setupDefaultConfig(configDir string) {
+
 	c.ConfigDir = configDir
 	c.GoMaxProcessors = -1
 
 	// Generate default logging config
-	c.Logger = log.NewConfig()
+	c.LogConfig = log.NewConfig()
 
 	// Copy default logging config to global log config
 	log.RWM.Lock()
-	log.GlobalLogConfig = c.Logger
+	log.GlobalLogConfig = c.LogConfig
 	log.RWM.Unlock()
 
 	// Generate default database config
-	c.Database = database.NewConfig()
+	c.DatabaseConfig = database.NewConfig(configDir)
 
 	// Generate default webserver config
-	c.Webserver = &webserver.Config{}
+	c.WebserverConfig = webserver.NewConfig(configDir)
 
 }
 
 func (c *Config) SaveConfig() error {
+
 	// A common use case is to get a private config folder for your app to
 	// place its settings files into, that are specific to the local user.
 	configPath := LocalConfig("QuantstopTerminal")
 
 	// Deal with a JSON configuration file in that folder.
 	configFile := filepath.Join(configPath, "settings.json")
+
 	//fh, err := os.Open(configFile)
 	fh, err := os.OpenFile(configFile, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, DefaultFileMode)
 	if err != nil {
@@ -193,18 +197,23 @@ func (c *Config) SaveConfig() error {
 	defer func(fh *os.File) {
 		_ = fh.Close()
 	}(fh)
+
 	// Write config to file in json format
 	err = jsonUtils.PrettyEncodeJson(&c, fh)
 	if err != nil {
-		//log.Fatal(err)
-		log.Error(log.Global, err)
 		return err
 	}
+
+	// Verify config
+	if err = c.verifyConfig(); err != nil {
+		return fmt.Errorf("save config error: %v", err)
+	}
+
 	return nil
 }
 
-// CheckConfig will run private functions to verify the system config, and all subsystem configs are valid
-func (c *Config) CheckConfig() error {
+// verifyConfig will run Verify() on every service config to ensure all values are valid.
+func (c *Config) verifyConfig() error {
 	err := c.checkLoggerConfig()
 	if err != nil {
 		return err
@@ -219,33 +228,33 @@ func (c *Config) checkLoggerConfig() error {
 	mutex.Lock()
 	defer mutex.Unlock()
 
-	if c.Logger.Enabled == nil || c.Logger.Output == "" {
-		c.Logger = log.NewConfig()
+	if c.LogConfig.Enabled == nil || c.LogConfig.Output == "" {
+		c.LogConfig = log.NewConfig()
 	}
 
-	if c.Logger.AdvancedSettings.ShowLogSystemName == nil {
-		c.Logger.AdvancedSettings.ShowLogSystemName = convert.BoolPtr(false)
+	if c.LogConfig.AdvancedSettings.ShowLogSystemName == nil {
+		c.LogConfig.AdvancedSettings.ShowLogSystemName = convert.BoolPtr(false)
 	}
 
-	if c.Logger.LoggerFileConfig != nil {
-		if c.Logger.LoggerFileConfig.FileName == "" {
-			c.Logger.LoggerFileConfig.FileName = "log.txt"
+	if c.LogConfig.LoggerFileConfig != nil {
+		if c.LogConfig.LoggerFileConfig.FileName == "" {
+			c.LogConfig.LoggerFileConfig.FileName = "log.txt"
 		}
-		if c.Logger.LoggerFileConfig.Rotate == nil {
-			c.Logger.LoggerFileConfig.Rotate = convert.BoolPtr(false)
+		if c.LogConfig.LoggerFileConfig.Rotate == nil {
+			c.LogConfig.LoggerFileConfig.Rotate = convert.BoolPtr(false)
 		}
-		if c.Logger.LoggerFileConfig.MaxSize <= 0 {
-			log.Warnf(log.Global, "Logger rotation size invalid, defaulting to %v", log.DefaultMaxFileSize)
-			c.Logger.LoggerFileConfig.MaxSize = log.DefaultMaxFileSize
+		if c.LogConfig.LoggerFileConfig.MaxSize <= 0 {
+			//log.Warnf(log.Global, "Logger rotation size invalid, defaulting to %v", log.DefaultMaxFileSize)
+			c.LogConfig.LoggerFileConfig.MaxSize = log.DefaultMaxFileSize
 		}
 		log.FileLoggingConfiguredCorrectly = true
 	}
 	log.RWM.Lock()
-	log.GlobalLogConfig = c.Logger
+	log.GlobalLogConfig = c.LogConfig
 	log.RWM.Unlock()
 
 	logPath := c.GetDataPath("logs")
-	err := system.CreateDir(logPath)
+	err := system.CreateDir(logPath) //todo: what is this, it returns nil always?
 	if err != nil {
 		return err
 	}

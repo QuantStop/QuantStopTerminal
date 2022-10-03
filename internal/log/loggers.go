@@ -3,7 +3,6 @@ package log
 import (
 	"fmt"
 	"log"
-	"os"
 )
 
 // Info takes a pointer SubLogger struct and string sends to newLogEvent
@@ -124,22 +123,19 @@ func Errorf(sl *SubLogger, data string, v ...interface{}) {
 	Error(sl, fmt.Sprintf(data, v...))
 }
 
-// Fatal takes a pointer SubLogger struct & interface formats, sends to newLogEvent(), then exits the program
-func Fatal(sl *SubLogger, data ...interface{}) {
-	fields := sl.getFields()
-	if fields == nil || !fields.error {
-		return
-	}
-	displayError(fields.logger.newLogEvent(fmt.Sprint(data...),
-		fields.logger.ErrorHeader,
-		fields.name,
-		fields.output))
-	os.Exit(1)
+// Fatal wrapper around standard log.Fatal
+func Fatal(data ...interface{}) {
+	log.Fatal(data...)
 }
 
-// Fatalf takes a pointer SubLogger struct, string & interface formats and sends to Fatal()
-func Fatalf(sl *SubLogger, data string, v ...interface{}) {
-	Fatal(sl, fmt.Sprintf(data, v...))
+// Fatalf wrapper around standard log.Fatalf
+func Fatalf(data string, v ...interface{}) {
+	log.Fatalf(data, v...)
+}
+
+// Fatalln wrapper around standard log.Fatallln
+func Fatalln(v ...interface{}) {
+	log.Fatalln(v...)
 }
 
 // displayError is a helper function that displays any log write errors

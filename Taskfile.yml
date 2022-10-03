@@ -23,7 +23,7 @@ tasks:
     desc: Install all developer depencies for this project
     cmds:
       - task: install-go-releaser
-      - npm install
+      - task: frontend:install
 
   run:
     desc: Run the project in dev mode
@@ -34,12 +34,13 @@ tasks:
   build:
     desc: Build the project
     cmds:
-      - goreleaser build -f ./.configs/.goreleaser.yaml --rm-dist
+      - task: frontend:build
+      - goreleaser release -f ./.configs/.goreleaser.yaml --rm-dist --snapshot
 
   release:
     desc: Release the project
     cmds:
-      - npm run semantic-release
+      - task: frontend:semantic-release
       - goreleaser release -f ./.configs/.goreleaser.yaml --rm-dist
 
   install-go-releaser:

@@ -14,18 +14,18 @@ import (
 func TestMain(m *testing.M) {
 	err := setupTestLoggers()
 	if err != nil {
-		log.Fatal("cannot set up test loggers", err)
+		log.Fatal("cannot set up test loggers: ", err)
 	}
 	tempDir, err := os.MkdirTemp(os.TempDir(), "")
 	if err != nil {
-		log.Fatal("Cannot create temporary file", err)
+		log.Fatal("Cannot create temporary file: ", err)
 	}
-	log.Println("temp dir created at:", tempDir)
+	log.Println("temp dir created at: ", tempDir)
 	FilePath = tempDir
 	r := m.Run()
 	err = os.Remove(tempDir)
 	if err != nil {
-		log.Println("failed to remove temp file:", tempDir)
+		log.Println("failed to remove temp file: ", tempDir)
 	}
 	os.Exit(r)
 }
@@ -50,7 +50,7 @@ func setupTestLoggers() error {
 		},
 		SubLoggers: []SubLoggerConfig{
 			{
-				Name:   "lOg",
+				Name:   "ENGINE",
 				Level:  "INFO|DEBUG|WARN|ERROR",
 				Output: "stdout",
 			}},
@@ -230,7 +230,7 @@ func TestGenDefaultSettings(t *testing.T) {
 
 func TestLevel(t *testing.T) {
 	t.Parallel()
-	_, err := Level("LOG")
+	_, err := Level("ENGINE")
 	if err != nil {
 		t.Errorf("Failed to get log %s levels skipping", err)
 	}
@@ -243,7 +243,7 @@ func TestLevel(t *testing.T) {
 
 func TestSetLevel(t *testing.T) {
 	t.Parallel()
-	newLevel, err := SetLevel("LOG", "ERROR")
+	newLevel, err := SetLevel("ENGINE", "ERROR")
 	if err != nil {
 		t.Skipf("Failed to get log %s levels skipping", err)
 	}
@@ -271,7 +271,7 @@ func TestCloseLogger(t *testing.T) {
 
 func TestConfigureSubLogger(t *testing.T) {
 	t.Parallel()
-	err := configureSubLogger("LOG", "INFO", os.Stdin)
+	err := configureSubLogger("ENGINE", "INFO", os.Stdin)
 	if err != nil {
 		t.Skipf("configureSubLogger() returned unexpected error %v", err)
 	}
@@ -279,7 +279,7 @@ func TestConfigureSubLogger(t *testing.T) {
 	if (levels != Levels{Info: true, Debug: false}) {
 		t.Error("configureSubLogger() incorrectly configure subLogger")
 	}
-	if Global.name != "LOG" {
+	if Global.name != "ENGINE" {
 		t.Error("configureSubLogger() Failed to uppercase name")
 	}
 }

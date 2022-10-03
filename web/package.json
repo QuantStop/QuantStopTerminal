@@ -10,11 +10,11 @@
     "url": "git+https://github.com/quantstop/quantstopterminal.git"
   },
   "scripts": {
-    "dev": "vite --config ./web/vite.config.ts",
+    "dev": "vite",
     "build": "run-p type-check build-only",
-    "preview": "vite --config web/vite.config.ts preview --port 4173",
-    "build-only": "vite build --config ./web/vite.config.ts ",
-    "type-check": "vue-tsc -p ./web/tsconfig.json --noEmit",
+    "preview": "vite preview --port 4173",
+    "build-only": "vite build",
+    "type-check": "vue-tsc --noEmit",
     "semantic-release": "semantic-release"
   },
   "release": {
@@ -38,7 +38,7 @@
       [
         "@semantic-release/changelog",
         {
-          "changelogFile": "./docs/CHANGELOG.md"
+          "changelogFile": "../docs/CHANGELOG.md"
         }
       ],
       "@semantic-release/npm",
@@ -49,11 +49,7 @@
       [
         "@semantic-release/git",
         {
-          "assets": [
-            "./docs/CHANGELOG.md",
-            "./package.json",
-            "package-lock.json"
-          ],
+          "assets": ["../docs/CHANGELOG.md", "./package.json", "./package-lock.json"],
           "message": "chore(release): set `version` to ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
         }
       ]

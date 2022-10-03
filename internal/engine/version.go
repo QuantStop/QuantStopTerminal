@@ -16,6 +16,7 @@ var (
 type Version struct {
 	Version         string
 	BuildTime       string
+	Commit          string
 	Copyright       string
 	PrereleaseBlurb string
 	GitHub          string
@@ -25,9 +26,26 @@ type Version struct {
 	IsDevMode       bool
 }
 
+func CreateVersion(version, buildTime, commit string, isDaemon, isPreRelease, isDevMode bool) *Version {
+	return &Version{
+		Version:         version,
+		BuildTime:       buildTime,
+		Commit:          commit,
+		Copyright:       Copyright,
+		PrereleaseBlurb: PrereleaseBlurb,
+		GitHub:          GitHub,
+		Issues:          Issues,
+		IsDaemon:        isDaemon,
+		IsPreRelease:    isPreRelease,
+		IsDevMode:       isDevMode,
+	}
+}
+
 func CreateDefaultVersion() *Version {
 	return &Version{
-		Version:         "0.0.1",
+		Version:         "0.0.0",
+		BuildTime:       "0001-01-01T00:00:00Z",
+		Commit:          "0000000",
 		Copyright:       Copyright,
 		PrereleaseBlurb: PrereleaseBlurb,
 		GitHub:          GitHub,
