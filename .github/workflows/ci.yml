@@ -19,7 +19,7 @@ jobs:
   #    - uses: golangci/golangci-lint-action@v3
 
   build:
-    name: Build and Run
+    name: Build and Test
     runs-on: ${{ matrix.os }}
     #needs: lint
     strategy:

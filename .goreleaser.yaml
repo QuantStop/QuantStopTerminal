@@ -10,15 +10,6 @@ release:
   # Default is `{{.Tag}}` on OSS and `{{.PrefixedTag}}` on Pro.
   name_template: '{{.Tag}}'
 
-  # Whether to remove existing draft releases with the same name before creating
-  # a new one.
-  # Only effective if `draft` is set to true.
-  # Available only for GitHub.
-  #
-  # Default: false.
-  # Since: v1.11.
-  replace_existing_draft: true
-
   # If set to auto, will mark the release as not ready for production
   # in case there is an indicator for this in the tag e.g. v1.0.0-rc1
   # If set to true, will mark the release as not ready for production.
