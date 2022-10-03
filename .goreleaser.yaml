@@ -56,26 +56,27 @@ builds:
     # ID of the build.
     # Defaults to the binary name.
     id: QuantStopTerminal
+
+    # GOOS list to build for.
+    # For more info refer to: https://golang.org/doc/install/source#environment
+    # Defaults are darwin and linux.
     goos:
       - linux
       - windows
       - darwin
+
+    # GOARCH to build for.
+    # For more info refer to: https://golang.org/doc/install/source#environment
+    # Defaults are 386, amd64 and arm64.
     goarch:
       - amd64
-      - arm64
       - "386"
-    goarm:
-      - "6"
-    gomips:
-      - hardfloat
+
+    # GOAMD64 to build when GOARCH is amd64.
+    # For more info refer to: https://golang.org/doc/install/source#environment
+    # Default is only v1.
     goamd64:
       - v1
-    targets:
-      - linux_amd64_v1
-      - linux_386
-      - windows_amd64_v1
-      - windows_386
-      - darwin_amd64_v1
 
     dir: ./cmd/qst
 
@@ -95,11 +96,33 @@ builds:
     flags:
       - -tags=prod
 
+    # Builder allows you to use a different build implementation.
+    # This is a GoReleaser Pro feature.
+    # Valid options are: `go` and `prebuilt`.
+    # Defaults to `go`
     builder: go
+
+    # Set a specific go binary to use when building.
+    # It is safe to ignore this option in most cases.
+    #
+    # Default is "go"
     gobinary: go
+
+    # Sets the command to run to build.
+    # Can be useful if you want to build tests, for example,
+    # in which case you can set this to "test".
+    # It is safe to ignore this option in most cases.
+    #
+    # Default: build.
+    # Since: v1.9.
     command: build
+
+    # Custom ldflags templates.
     ldflags:
       - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}
+
+    # Custom environment variables to be set during the builds.
+    # Default is empty.
     env:
       - CGO_ENABLED=1
       - GO111MODULE=on
