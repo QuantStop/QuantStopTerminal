@@ -60,7 +60,11 @@ scoop:
   commit_msg_template: Scoop update for {{ .ProjectName }} version {{ .Tag }}
   goamd64: v1
 builds:
-  - id: QuantStopTerminal
+  # You can have multiple builds defined as a yaml list
+  -
+    # ID of the build.
+    # Defaults to the binary name.
+    id: QuantStopTerminal
     goos:
       - linux
       - windows
@@ -84,12 +88,29 @@ builds:
       - windows_386
       - darwin_amd64_v1
       - darwin_arm64
+
+
     dir: ./cmd/qst
+
+    # Path to main.go file or main package.
+    # Notice: when used with `gomod.proxy`, this must be a package.
+    #
+    # Default is `.`.
     main: .
+
+    # Binary name.
+    # Can be a path (e.g. `bin/app`) to wrap the binary in a directory.
+    # Default is the name of the project directory.
     binary: QuantStopTerminal
+
+    # Custom flags templates.
+    # Default is empty.
+    flags:
+      - -tags=prod
+
     builder: go
     gobinary: go
-    command: build -tags=prod
+    command: build
     ldflags:
       - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}} -X main.builtBy=goreleaser
     env:

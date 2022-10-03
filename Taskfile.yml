@@ -32,7 +32,7 @@ tasks:
       - air -c ./.configs/.air.toml
 
   build:
-    desc: Build the project
+    desc: Build the project without releasing
     cmds:
       - task: frontend:build
       - goreleaser release -f ./.configs/.goreleaser.yaml --rm-dist --snapshot
