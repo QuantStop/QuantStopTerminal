@@ -1,6 +1,6 @@
 package tests
 
-import (
+/*import (
 	"context"
 	"fmt"
 	quantstopexchange "github.com/quantstop/quantstopterminal/pkg/exchange"
@@ -129,4 +129,4 @@ func TestCoinbaseFeed(t *testing.T) {
 
 	_ = wg.Wait()
 
-}
+}*/

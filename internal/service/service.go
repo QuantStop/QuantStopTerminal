@@ -64,6 +64,10 @@ func (service *Service) Start(wg *sync.WaitGroup) {
 	log.Debugln(log.Global, service.name+MsgServiceStarting)
 }
 
+func (service *Service) Run(wg *sync.WaitGroup) {
+
+}
+
 // Stop The function to stop the service
 func (service *Service) Stop() error {
 	if service == nil {

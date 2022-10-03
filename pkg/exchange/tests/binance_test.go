@@ -1,6 +1,6 @@
 package tests
 
-import (
+/*import (
 	"context"
 	quantstopexchange "github.com/quantstop/quantstopterminal/pkg/exchange"
 	"github.com/quantstop/quantstopterminal/pkg/exchange/qsx"
@@ -33,4 +33,4 @@ func TestBinanceCandles(t *testing.T) {
 	for _, candle := range candles {
 		t.Logf("Candle Time: %v | Open: %v | High: %v | Low: %v | Close: %v | Volume: %v", candle.Time, candle.Open, candle.High, candle.Low, candle.Close, candle.Volume)
 	}
-}
+}*/
