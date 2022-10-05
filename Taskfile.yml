@@ -6,6 +6,9 @@ includes:
   linux: ./.tasks/LinuxTasks.yml
   frontend: ./.tasks/FrontendTasks.yml
 
+  build: ./.tasks/build/Taskfile_{{OS}}.yml
+
+
 vars:
   VERSION: 0.0.1
   PROJECT_DIR:
@@ -30,6 +33,11 @@ tasks:
     dir: ./
     cmds:
       - air -c .air.toml
+
+  build2:
+    desc: Build the project without releasing
+    cmds:
+      - task: build:build
 
   build:
     desc: Build the project without releasing

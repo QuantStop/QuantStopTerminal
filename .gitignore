@@ -48,3 +48,4 @@ lerna-debug.log*
 .DS_Store
 coverage
 *.local
+/cmd/qst/resource.syso

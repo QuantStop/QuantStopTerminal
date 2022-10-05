@@ -65,7 +65,7 @@ func (service *Service) Start(wg *sync.WaitGroup) error {
 	return nil
 }
 
-// Run is the main thread of the process as a goroutine
+// Run is the main thread of the process, called as a goroutine.
 func (service *Service) Run(wg *sync.WaitGroup) {}
 
 // Stop terminates all processes belonging to the service, blocking until they are all terminated.
@@ -81,7 +81,7 @@ func (service *Service) Stop() error {
 	return nil
 }
 
-// IsRunning checks whether the service is running
+// IsRunning returns true if the service is currently running.
 func (service *Service) IsRunning() bool {
 	if service == nil {
 		return false
@@ -89,16 +89,17 @@ func (service *Service) IsRunning() bool {
 	return service.started
 }
 
-// IsEnabled checks whether the service is enabled or not
+// IsEnabled returns true if the service is allowed to run.
 func (service *Service) IsEnabled() bool {
 	return service.enabled
 }
 
-// GetName returns the subsystems name
+// GetName returns the name of the service.
 func (service *Service) GetName() string {
 	return service.name
 }
 
+// Health returns nil if the service is healthy, otherwise returns the last error
 func (service *Service) Health() error {
 	return service.lastErr
 }

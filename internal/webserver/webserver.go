@@ -54,7 +54,7 @@ func NewWebserver(config *Config, db *database.Database) (*Webserver, error) {
 		Handler: mux,
 	}
 
-	ws.ConfigureRouter(config.DevMode)
+	ws.ConfigureRoutes(config.DevMode)
 	ws.PrintRoutes()
 
 	hub, err := websocket.NewHub(db, ws.Service.Shutdown)
@@ -66,7 +66,7 @@ func NewWebserver(config *Config, db *database.Database) (*Webserver, error) {
 	return ws, nil
 }
 
-// Start is the main process for the service, run as a goroutine.
+// Start spawns all processes done by the service.
 func (s *Webserver) Start(serviceWG *sync.WaitGroup) error {
 	if err := s.Service.Start(serviceWG); err != nil {
 		return err
@@ -81,10 +81,11 @@ func (s *Webserver) Start(serviceWG *sync.WaitGroup) error {
 	return nil
 }
 
+// Run is the main thread of the process, called as a goroutine.
 func (s *Webserver) Run(serviceWG *sync.WaitGroup) {
 	// if dev mode, run node server
 	if s.DevMode {
-		go s.StartNodeDevelopmentServer(serviceWG)
+		go s.startDevServer(serviceWG)
 	}
 
 	// start the server
@@ -126,7 +127,7 @@ func (s *Webserver) Run(serviceWG *sync.WaitGroup) {
 	log.Debugln(log.Webserver, s.GetName()+service.MsgServiceShutdown)
 }
 
-// Stop terminates all processes belonging to the service, blocking until they are all terminated.
+// Stop terminates all processes belonging to the service.
 func (s *Webserver) Stop() error {
 	if err := s.Service.Stop(); err != nil {
 		return err
@@ -143,7 +144,8 @@ func (s *Webserver) Stop() error {
 	return nil
 }
 
-func (s *Webserver) StartNodeDevelopmentServer(serviceWG *sync.WaitGroup) {
+// startDevServer starts an npm development server for the frontend.
+func (s *Webserver) startDevServer(serviceWG *sync.WaitGroup) {
 	serviceWG.Add(1)
 	log.Debugf(log.Webserver, "Starting node development server ...")
 

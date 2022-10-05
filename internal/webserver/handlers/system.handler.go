@@ -11,6 +11,12 @@ package handlers
 	"net/url"
 )
 
+func (s *Webserver) GetSubsystemStatus(user *models.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
+
+	return write.JSON(bot.GetSubsystemsStatus())
+}
+
+
 type setSubsystemRequest struct {
 	Subsystem string `json:"subsystem"`
 	Enable    bool   `json:"enable"`

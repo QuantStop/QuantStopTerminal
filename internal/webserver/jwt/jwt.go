@@ -69,6 +69,7 @@ func HandleUserCookie(w http.ResponseWriter, r *http.Request) (*models.User, err
 	return u, err
 }
 
+// wipeCookie sets a new empty user in the cookie
 func wipeCookie(w http.ResponseWriter) (*models.User, error) {
 	u := &models.User{}
 	WriteUserCookie(w, u)
@@ -139,11 +140,9 @@ func decodeUser(tokenString string) (*models.User, error) {
 				fmt.Println("ValidationError, token malformed.")
 				return nil, errors.InvalidToken
 			} else if ve.Errors&(jwt.ValidationErrorExpired) != 0 {
-				// Token is expired
 				fmt.Println("ValidationError, token expired.")
 				return nil, errors.ExpiredToken
 			} else if ve.Errors&(jwt.ValidationErrorNotValidYet) != 0 {
-				// Token is not active yet
 				fmt.Println("ValidationError, token not active yet.")
 				return nil, errors.InvalidToken
 			} else {
@@ -164,7 +163,10 @@ func decodeUser(tokenString string) (*models.User, error) {
 
 }
 
+// getUserFromToken attempts to extract a pointer to the User model.
 func getUserFromToken(token *jwt.Token) *models.User {
+
+	// is token.Claims type of/can be converted to *claims ?
 	if c, ok := token.Claims.(*claims); ok {
 		return &models.User{
 			ID:       c.User.ID,

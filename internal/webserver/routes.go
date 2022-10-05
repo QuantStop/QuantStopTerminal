@@ -12,7 +12,7 @@ import (
 	"runtime/debug"
 )
 
-func (s *Webserver) ConfigureRouter(isDev bool) {
+func (s *Webserver) ConfigureRoutes(isDev bool) {
 
 	log.Debugln(log.Webserver, "Setting up middleware ... ")
 	//s.mux.RegisterMiddleware()
@@ -35,17 +35,15 @@ func (s *Webserver) ConfigureRouter(isDev bool) {
 	s.GET("/api/uptime", handlers.GetUptime, router.Public)*/
 
 	// Session routes
-	/*s.POST("/api/session", handlers.Login, router.Public)
-	s.DELETE("/api/session", handlers.Logout, router.User)
-	s.GET("/api/refresh-token", handlers.Test, router.User)*/
-
-	// Reset routes
-	/*s.mux.POST("/reset", handlers.CreateReset, router.User)
-	s.mux.GET("/reset/([0-9]+)", handlers.DoReset, router.User)*/
+	s.POST("/api/session", s.Login, router.Public)
+	s.DELETE("/api/session", s.Logout, router.User)
+	s.GET("/api/refresh-token", s.RefreshToken, router.User)
 
 	// User routes
 	/*s.POST("/api/signup", handlers.Signup, router.Public)
-	s.GET("/api/user", handlers.Whoami, router.User)*/
+	s.GET("/api/user", handlers.Whoami, router.User)
+	s.mux.POST("/reset", handlers.CreateReset, router.User)
+	s.mux.GET("/reset/([0-9]+)", handlers.DoReset, router.User)*/
 
 	/* Exchange routes */
 	/*s.GET("/api/exchanges", handlers.GetExchanges, router.User)

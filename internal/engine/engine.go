@@ -89,6 +89,9 @@ func NewEngine(version, commit, date string) (*Engine, error) {
 
 // Start the engine. Starts the application and all services.
 func (bot *Engine) Start() error {
+	if bot == nil {
+		return errNilEngine
+	}
 	log.Infoln(log.Global, "Starting Engine ...")
 
 	// set current uptime to now
@@ -113,6 +116,9 @@ func (bot *Engine) Start() error {
 
 // WaitForInterrupt is a blocking routine that returns when an operating system interrupt signal is received.
 func (bot *Engine) WaitForInterrupt() error {
+	if bot == nil {
+		return errNilEngine
+	}
 	log.Infoln(log.Global, "Waiting for interrupt to shutdown ...")
 
 	// main thread will block here until an interrupt is received
@@ -123,6 +129,9 @@ func (bot *Engine) WaitForInterrupt() error {
 
 // Stop the engine. Stops all services and exits the application.
 func (bot *Engine) Stop() error {
+	if bot == nil {
+		return errNilEngine
+	}
 	log.Infoln(log.Global, "Stopping Engine ...")
 
 	// stop all services

@@ -1,9 +1,8 @@
-package handlers
+package webserver
 
-/*import (
+import (
 	"database/sql"
 	"encoding/json"
-	"github.com/quantstop/quantstopterminal/internal"
 	"github.com/quantstop/quantstopterminal/internal/database/models"
 	"github.com/quantstop/quantstopterminal/internal/webserver/errors"
 	"github.com/quantstop/quantstopterminal/internal/webserver/jwt"
@@ -25,14 +24,14 @@ type loginResponse struct {
 	IsFirstLogin bool     `json:"is_first_login"`
 }
 
-type signupRequest struct {
+/*type signupRequest struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
-}
+}*/
 
-func Login(bot internal.IEngine, user *models.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
+func (s *Webserver) Login(user *models.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
 
-	db, _ := bot.GetSQL("core")
+	db := s.Database.CoreDB.SQL
 	decoder := json.NewDecoder(r.Body)
 	req := loginRequest{}
 	err := decoder.Decode(&req)
@@ -75,7 +74,7 @@ func Login(bot internal.IEngine, user *models.User, w http.ResponseWriter, r *ht
 	return write.JSON(res)
 }
 
-func Logout(bot internal.IEngine, user *models.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
+func (s *Webserver) Logout(user *models.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
 	u := &models.User{
 		ID:       0,
 		Username: "",
@@ -85,9 +84,13 @@ func Logout(bot internal.IEngine, user *models.User, w http.ResponseWriter, r *h
 	return write.Success()
 }
 
-func Signup(bot internal.IEngine, user *models.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
+func (s *Webserver) RefreshToken(user *models.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
+	return write.Success()
+}
 
-	db, _ := bot.GetSQL("core")
+/*func (s *Handlers) Signup(user *models.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
+
+	db := s.Database.CoreDB.SQL
 
 	decoder := json.NewDecoder(r.Body)
 	req := signupRequest{}

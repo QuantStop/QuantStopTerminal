@@ -165,7 +165,7 @@ func NewDatabase(config *Config) (*Database, error) {
 	return db, nil
 }
 
-// Start spawns the main process done by the service.
+// Start spawns all processes done by the service.
 func (db *Database) Start(group *sync.WaitGroup) error {
 	if err := db.Service.Start(group); err != nil {
 		return err
@@ -175,6 +175,7 @@ func (db *Database) Start(group *sync.WaitGroup) error {
 	return nil
 }
 
+// Run is the main thread of the process, called as a goroutine.
 func (db *Database) Run(wg *sync.WaitGroup) {
 	t := time.NewTicker(time.Second * 5)
 
@@ -200,7 +201,7 @@ func (db *Database) Run(wg *sync.WaitGroup) {
 	}
 }
 
-// Stop terminates all processes belonging to the service, blocking until they are all terminated.
+// Stop terminates all processes belonging to the service.
 func (db *Database) Stop() error {
 	if err := db.Service.Stop(); err != nil {
 		return err
