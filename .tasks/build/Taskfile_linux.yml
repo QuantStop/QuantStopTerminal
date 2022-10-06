@@ -1,1 +1,14 @@
 version: '3'
+
+tasks:
+
+  build:
+    cmds:
+      -task: build-amd64
+
+  build-amd64:
+    desc: Build qst for linux-amd64 (64-bit)
+    cmds:
+      - task frontend:npm-build
+      - GO111MODULE=on GOOS=linux GOARCH=amd64 go build -ldflags="-X=main.BuildFlagVersion={{.VERSION}} " -tags=prod -o {{.PROJECT_DIR}}/builds/linux-amd64/qst {{.PROJECT_DIR}}/cmd/qst/main.go
+

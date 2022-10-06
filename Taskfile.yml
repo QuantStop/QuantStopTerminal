@@ -1,19 +1,17 @@
 version: '3'
 
 includes:
+  #build: ./.tasks/build/Taskfile_{{OS}}.yml
+  #test: ./.tasks/build/Taskfile_{{OS}}.yml
+  #release: ./.tasks/build/Taskfile_{{OS}}.yml
   docker: ./.tasks/DockerTasks.yml
-  windows: ./.tasks/WindowsTasks.yml
-  linux: ./.tasks/LinuxTasks.yml
   frontend: ./.tasks/FrontendTasks.yml
-
-  build: ./.tasks/build/Taskfile_{{OS}}.yml
-
 
 vars:
   VERSION: 0.0.1
   PROJECT_DIR:
     sh: pwd | sed 's/\\/\//g'
-  ISRELEASE: true
+  ISRELEASE: false
 
 tasks:
 
@@ -34,10 +32,10 @@ tasks:
     cmds:
       - air -c .air.toml
 
-  build2:
-    desc: Build the project without releasing
-    cmds:
-      - task: build:build
+  #build:
+    #desc: Build the project without releasing
+    #cmds:
+      #- task: build:build
 
   build:
     desc: Build the project without releasing
@@ -45,7 +43,7 @@ tasks:
       - task: frontend:build
       - goreleaser release --rm-dist --snapshot
 
-  release:
+  ci:
     desc: Release the project
     cmds:
       - task: frontend:lint
