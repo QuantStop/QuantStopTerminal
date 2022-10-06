@@ -41,7 +41,7 @@ jobs:
         with:
           node-version: 'lts/*'
       - run: cd ./web && npm install && npm run lint && npm run build
-      - run: apt install build-essential
+      - run: sudo apt install build-essential
       - uses: go-semantic-release/action@v1
         id: semrel
         with:
