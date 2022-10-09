@@ -50,7 +50,7 @@ jobs:
           hooks: goreleaser
           prerelease: true
           allow-initial-development-versions: true
-          update-file: ./web/package.json
+          update-file: package.json
           changelog-generator-opt: "emojis=true"
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
