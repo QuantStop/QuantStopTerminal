@@ -40,6 +40,7 @@ jobs:
       - uses: actions/setup-go@v3
         with:
           go-version: 1.19
+          cache: true
       - uses: actions/setup-node@v3
         with:
           node-version: 'lts/*'
@@ -50,7 +51,7 @@ jobs:
           hooks: goreleaser
           prerelease: true
           allow-initial-development-versions: true
-          update-file: ./package.json
+          update-file: ./web/package.json
           changelog-generator-opt: "emojis=true"
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
