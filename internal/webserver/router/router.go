@@ -2,9 +2,7 @@ package router
 
 import (
 	"context"
-	"errors"
 	"fmt"
-	"github.com/quantstop/quantstopterminal/internal/database"
 	"github.com/quantstop/quantstopterminal/internal/log"
 	"github.com/quantstop/quantstopterminal/internal/webserver/middleware"
 	"github.com/quantstop/quantstopterminal/internal/webserver/utils"
@@ -18,7 +16,6 @@ import (
 
 type Router struct {
 	devMode            bool
-	DB                 *database.Database
 	routes             []Route
 	middlewareHandlers []http.HandlerFunc
 	MethodNotAllowed   http.HandlerFunc
@@ -39,15 +36,9 @@ func GetField(r *http.Request, index int) string {
 }
 
 // New returns a pointer to a new Router
-func New(devMode bool, db *database.Database) (*Router, error) {
-
-	if db == nil {
-		return nil, errors.New("router cannot have nil database")
-	}
-
+func New(devMode bool) (*Router, error) {
 	return &Router{
 		devMode: devMode,
-		DB:      db,
 	}, nil
 }
 

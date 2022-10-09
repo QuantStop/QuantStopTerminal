@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/quantstop/quantstopterminal/internal/database/models"
+	"github.com/quantstop/quantstopterminal/internal/log"
 	"github.com/quantstop/quantstopterminal/internal/webserver/errors"
-	"log"
 	"net/http"
 	"os"
 	"time"
@@ -21,15 +21,16 @@ const tokenLifetime = time.Hour * 6
 
 var hmacSecret []byte
 
-func init() {
+func InitSecret() error {
 	hmacSecret = []byte(os.Getenv("API_SECRET"))
-	if hmacSecret == nil {
-		log.Fatal("No API_SECRET environment variable was found!")
+	if hmacSecret == nil || string(hmacSecret) == "" {
+		return errors.InsecureJWT
 	}
 	if string(hmacSecret) == insecureSecret {
-		log.Print("\n\n*** WARNING ***\nYour JWT isn't secure!\n")
-		log.Print("You need to change your API_SECRET variable in .env (and restart your containers).\n\n")
+		return errors.InsecureJWT
 	}
+	log.Debugf(log.Webserver, "webserver using jwt secret: %v", string(hmacSecret))
+	return nil
 }
 
 type userClaims struct {
@@ -80,7 +81,7 @@ func wipeCookie(w http.ResponseWriter) (*models.User, error) {
 func userFromCookie(r *http.Request) (*models.User, error) {
 	cookie, err := r.Cookie(cookieName)
 	if err != nil {
-		log.Println(err)
+		log.Error(log.Webserver, err)
 	}
 
 	var tokenString string
@@ -89,7 +90,7 @@ func userFromCookie(r *http.Request) (*models.User, error) {
 	}
 
 	if tokenString == "" {
-		log.Println("token string empty")
+		log.Error(log.Webserver, "token string empty")
 		return &models.User{}, nil
 	}
 
@@ -116,7 +117,7 @@ func encodeUser(u *models.User, t time.Time) (tokenString string) {
 	// unhandled err here
 	tokenString, err := token.SignedString(hmacSecret)
 	if err != nil {
-		log.Println("Error signing token", err)
+		log.Error(log.Webserver, "Error signing token", err)
 	}
 	return
 }

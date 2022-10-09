@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"database/sql"
+	"github.com/quantstop/quantstopterminal/internal/database/repository"
 )
 
 // IDatabase allows for the passing of a database struct
@@ -10,7 +11,7 @@ import (
 type IDatabase interface {
 	IsConnected() bool
 	GetSQL() (*sql.DB, error)
-	GetConfig() *Config
+	GetConfig() *repository.InstanceConfig
 }
 
 // ISQL allows for the passing of an SQL connection

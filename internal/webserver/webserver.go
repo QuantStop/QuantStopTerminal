@@ -7,6 +7,7 @@ import (
 	"github.com/quantstop/quantstopterminal/internal/log"
 	"github.com/quantstop/quantstopterminal/internal/service"
 	"github.com/quantstop/quantstopterminal/internal/system/crypto"
+	"github.com/quantstop/quantstopterminal/internal/webserver/jwt"
 	"github.com/quantstop/quantstopterminal/internal/webserver/router"
 	"github.com/quantstop/quantstopterminal/internal/webserver/websocket"
 	"net/http"
@@ -37,7 +38,11 @@ func NewWebserver(config *Config, db *database.Database) (*Webserver, error) {
 		return nil, fmt.Errorf("create webserver failed, nil database received")
 	}
 
-	mux, err := router.New(config.DevMode, db)
+	if err := jwt.InitSecret(); err != nil {
+		return nil, err
+	}
+
+	mux, err := router.New(config.DevMode)
 	if err != nil {
 		return nil, err
 	}

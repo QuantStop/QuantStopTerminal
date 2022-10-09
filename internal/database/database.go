@@ -28,7 +28,7 @@ var (
 type Database struct {
 	*Config
 	*service.Service
-	CoreDB         *repository.Instance
+	CoreDB         *repository.CoreDatabase
 	CoinbaseDB     *repository.Instance
 	TDAmeritradeDB *repository.Instance
 }
@@ -52,7 +52,7 @@ func NewDatabase(config *Config) (*Database, error) {
 	}
 
 	if config.CoreConfig.Enabled {
-		db.CoreDB = repository.CoreDB
+		db.CoreDB = &repository.CoreDatabase{Instance: repository.CoreDB}
 		if err = db.CoreDB.SetConfig(config.CoreConfig); err != nil {
 			return nil, err
 		}
@@ -63,20 +63,20 @@ func NewDatabase(config *Config) (*Database, error) {
 				config.CoreConfig.DSN.Host,
 				config.CoreConfig.DSN.Database,
 				config.CoreConfig.Driver)
-			db.CoreDB, err = postgres.Connect("core", config.CoreConfig.DSN)
+			db.CoreDB.Instance, err = postgres.Connect("core", config.CoreConfig.DSN)
 		case drivers.DBSQLite, drivers.DBSQLite3:
 			log.Debugf(log.Database,
 				"database subsystem attempting to establish database connection to %s utilising %s driver\n",
 				config.CoreConfig.DSN.Database,
 				config.CoreConfig.Driver)
-			db.CoreDB, err = sqlite.Connect("core", config.CoreConfig.DSN.Database)
+			db.CoreDB.Instance, err = sqlite.Connect("core", config.CoreConfig.DSN.Database)
 		case drivers.DBMySQL:
 			log.Debugf(log.Database,
 				"database subsystem attempting to establish database connection to host %s/%s utilising %s driver\n",
 				config.CoreConfig.DSN.Host,
 				config.CoreConfig.DSN.Database,
 				config.CoreConfig.Driver)
-			db.CoreDB, err = mysql.Connect("core", config.CoreConfig.DSN)
+			db.CoreDB.Instance, err = mysql.Connect("core", config.CoreConfig.DSN)
 		default:
 			return nil, errors.ErrNoDatabaseProvided
 		}

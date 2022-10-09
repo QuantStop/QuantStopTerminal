@@ -6,7 +6,7 @@ import (
 )
 
 var (
-	NilDBError = errors.New("nil database")
+	InsecureJWT = errors.New("jwt is not secure")
 
 	BadRequestMethod = errors.New(http.StatusText(http.StatusMethodNotAllowed))
 	InternalError    = errors.New(http.StatusText(http.StatusInternalServerError))
